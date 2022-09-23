@@ -1,0 +1,397 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DeliveryMobile.Views.EventCalendarDeliveryPage"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:Models="clr-namespace:DeliveryMobile.Models"
+             x:Name="This"
+             xmlns:ViewModels="clr-namespace:DeliveryMobile.ViewModels"
+             xmlns:xc="clr-namespace:XCalendar.Forms.Views;assembly=XCalendar.Forms"
+             xmlns:xcConverters="clr-namespace:XCalendar.Forms.Converters;assembly=XCalendar.Forms"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:fontIcon="clr-namespace:DeliveryMobile.Helpers" 
+             xmlns:pv="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             xct:SafeAreaEffect.SafeArea="True"
+             x:DataType="{x:Type ViewModels:EventCalendarDeliveryViewModel}"
+             Style="{StaticResource DefaultPageStyle}">
+    <ContentPage.Resources>
+        <!--  Limits a string to a certain amount of characters  -->
+        <xcConverters:StringCharLimitConverter x:Key="StringCharLimitConverter"/>
+        <!--  Returns true if all bindings evaluate to true  -->
+        <xct:VariableMultiValueConverter x:Key="AllTrueConverter" ConditionType="All"/>
+        <!--  Inverts a binded boolean value  -->
+        <xct:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
+        <Style x:Key="FrameStyle" TargetType="{x:Type Frame}">
+            <Setter Property="HasShadow" Value="False"/>
+            <Setter Property="HeightRequest" Value="45"/>
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="BackgroundColor" Value="{StaticResource FrameBackgroundColor}"/>
+        </Style>
+    </ContentPage.Resources>
+
+    <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <Grid ColumnSpacing="0" Margin="5"
+              RowDefinitions="Auto,*, Auto" RowSpacing="5" >
+            <!--#region Calander-->
+            <Frame IsVisible="{Binding IsVisibleCalendar}" Margin="5" Padding="10" BackgroundColor="{StaticResource ContentBackgroundColor}"
+                   CornerRadius="15" HasShadow="False">        
+                <xc:CalendarView x:Name="MainCalendarView"
+                             Grid.Row="0"
+                             BackwardsArrowCommand="{Binding NavigateCalendarCommand}"
+                             BackwardsArrowCommandParameter="{Binding EventCalendar.BackwardsNavigationAmount}"
+                             Days="{Binding EventCalendar.Days}"
+                             DaysOfWeek="{Binding EventCalendar.DayNamesOrder}"
+                             ForwardsArrowCommand="{Binding NavigateCalendarCommand}"
+                             ForwardsArrowCommandParameter="{Binding EventCalendar.ForwardsNavigationAmount}"
+                             NavigatedDate="{Binding EventCalendar.NavigatedDate}"
+                             Style="{StaticResource DefaultCalendarViewStyle}">
+
+                    <xc:CalendarView.NavigationTemplate>
+                        <ControlTemplate>
+                            <xc:NavigationView
+                            ArrowColor="{StaticResource ContentTextColor}"
+                            BackgroundColor="Transparent"
+                            BackwardsArrowCommand="{Binding BackwardsArrowCommand, Source={RelativeSource TemplatedParent}}"
+                            BackwardsArrowCommandParameter="{Binding BackwardsArrowCommandParameter, Source={RelativeSource TemplatedParent}}"
+                            ForwardsArrowCommand="{Binding ForwardsArrowCommand, Source={RelativeSource TemplatedParent}}"
+                            ForwardsArrowCommandParameter="{Binding ForwardsArrowCommandParameter, Source={RelativeSource TemplatedParent}}"
+                            HeightRequest="40"
+                            Style="{StaticResource DefaultNavigationViewStyle}"
+                            Text="{Binding Text, Source={RelativeSource TemplatedParent}}"
+                            TextColor="{StaticResource ContentTextColor}"/>
+                        </ControlTemplate>
+                    </xc:CalendarView.NavigationTemplate>
+
+                    <xc:CalendarView.DayTemplate>
+                        <DataTemplate x:DataType="{x:Type Models:EventDay}">
+                            <!--  ContentView so that the margin is respected by the DaysView  -->
+                            <ContentView>
+                                <Frame Margin="2.5" Padding="0"
+                                   CornerRadius="5" HasShadow="False">
+                                    <Grid>
+                                        <xct:BadgeView Text="{Binding Events.Count}" BackgroundColor="{StaticResource PrimaryColor}" TextColor="White"
+                                                   AutoHide="True" BadgePosition="TopRight" >
+                                            <BoxView HeightRequest="0" WidthRequest="0"/>
+                                        </xct:BadgeView>
+                                        <xc:DayView CurrentMonthCommand="{Binding BindingContext.ChangeDateSelectionCommand, Source={x:Reference This}}"
+                                            CurrentMonthCommandParameter="{Binding DateTime}"
+                                            DateTime="{Binding DateTime}"
+                                            HeightRequest="41"
+                                            IsCurrentMonth="{Binding IsCurrentMonth}"
+                                            IsInvalid="{Binding IsInvalid}"
+                                            IsSelected="{Binding IsSelected}"
+                                            IsToday="{Binding IsToday}"
+                                            SelectedCommand="{Binding BindingContext.ChangeDateSelectionCommand, Source={x:Reference This}}"
+                                            SelectedCommandParameter="{Binding DateTime}"
+                                            Style="{StaticResource DefaultDayViewStyle}"
+                                            TodayCommand="{Binding BindingContext.ChangeDateSelectionCommand, Source={x:Reference This}}"
+                                            TodayCommandParameter="{Binding DateTime}">
+
+                                            <xc:DayView.ControlTemplate>
+                                                <ControlTemplate>
+                                                    <!--  Using a Grid to stack views on the z axis  -->
+                                                    <!--  TemplatedParent refers to the view that the ControlTemplate resides in  -->
+                                                    <Grid BindingContext="{Binding BindingContext, Source={RelativeSource TemplatedParent}}" RowSpacing="2">
+
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="1.5*"/>
+                                                        </Grid.RowDefinitions>
+
+                                                        <!--  ContentPresenter displays the default content for the control  -->
+                                                        <ContentPresenter Grid.Row="0" VerticalOptions="Center"/>
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </xc:DayView.ControlTemplate>
+
+                                        </xc:DayView>
+
+                                    </Grid>
+
+                                </Frame>
+                            </ContentView>
+                        </DataTemplate>
+                    </xc:CalendarView.DayTemplate>
+
+                </xc:CalendarView>
+            </Frame>
+            <!--#endregion-->
+
+            <!--#region Event-->
+            <CollectionView Grid.Row="1" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                        SelectionMode="None" ItemsSource="{Binding SelectedEvents}">
+                <CollectionView.EmptyView>
+                    <Label FontAttributes="Bold" FontSize="20"
+                           HorizontalTextAlignment="Center" Text="No Delivery"
+                           TextColor="{StaticResource ContentTextColor}" VerticalTextAlignment="Center"/>
+                </CollectionView.EmptyView>
+                <CollectionView.Header>
+                    <Grid>
+                        <Label Text="Delivery" TextColor="Black" FontSize="18" Margin="0,5,0,5"/>
+                    </Grid>
+                </CollectionView.Header>
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="15"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type Models:Event}">
+                        <pv:PancakeView BackgroundColor="White" VerticalOptions="StartAndExpand" 
+                                            HorizontalOptions="FillAndExpand">
+                            <Grid VerticalOptions="StartAndExpand" HorizontalOptions="FillAndExpand">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <BoxView BackgroundColor="{Binding Color}" WidthRequest="3" HorizontalOptions="Start"
+                                             VerticalOptions="FillAndExpand"/>
+                                <xct:Expander Grid.Column="1" 
+                                              ExpandAnimationEasing="{x:Static Easing.CubicIn}"
+                                              ExpandAnimationLength="500"
+                                              CollapseAnimationEasing="{x:Static Easing.CubicOut}"
+                                              CollapseAnimationLength="500">
+                                    <xct:Expander.Header>
+                                        <SwipeView BackgroundColor="Transparent" SwipeStarted="SwipeView_SwipeStarted" SwipeEnded="SwipeView_SwipeEnded" >
+                                            <SwipeView.RightItems>
+                                                <SwipeItems SwipeBehaviorOnInvoked="RemainOpen"
+                                                            Mode="Reveal">
+                                                    <SwipeItem Text="Edit" BackgroundColor="{StaticResource PrimaryColor}" Invoked="SwipeEditItem_Invoked" >
+                                                        <SwipeItem.IconImageSource>
+                                                            <FontImageSource Color="#FFFF" FontFamily="FAL" Glyph="{x:Static fontIcon:FontAwesomeIcons.FileEdit}"/>
+                                                        </SwipeItem.IconImageSource>
+                                                    </SwipeItem>
+                                                    <SwipeItem Text="Print" BackgroundColor="Green" Invoked="SwipePrint_Invoked" >
+                                                        <SwipeItem.IconImageSource>
+                                                            <FontImageSource Color="#FFFF" FontFamily="FAL" Glyph="{x:Static fontIcon:FontAwesomeIcons.Print}"/>
+                                                        </SwipeItem.IconImageSource>
+                                                    </SwipeItem>
+
+                                                </SwipeItems>
+                                            </SwipeView.RightItems>
+                                            <Grid HorizontalOptions="FillAndExpand">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="3*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                                                    <Label Text="{Binding TimeDelivery, StringFormat='{0:dd}'}" TextColor="{Binding CurrentDayColor}" FontSize="27" 
+                                                           HorizontalOptions="Center"/>
+                                                    <Label Text="{Binding TimeDelivery, StringFormat='{0:MMMM}'}" TextColor="{Binding CurrentDayColor}" FontSize="10" 
+                                                           HorizontalOptions="Center" Margin="0,-10,0,0"/>
+                                                </StackLayout>
+                                                <BoxView Grid.Column="1" BackgroundColor="#F2F4F8" WidthRequest="1" 
+                                                         HorizontalOptions="Start" 
+                                                         VerticalOptions="FillAndExpand"/>
+                                                <Grid Grid.Column="2" ColumnDefinitions="*,50">
+                                                    <StackLayout Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Center" Spacing="5" Margin="20">
+                                                        <Label Text="{Binding JobNo}" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                                                        <Label FontSize="12" Margin="0,0,0,0">
+                                                            <Label.FormattedText>
+                                                                <FormattedString>
+                                                                    <FormattedString.Spans>
+                                                                        <Span Text="{Binding TimeDelivery, StringFormat='{0:HH:mm}'}" TextColor="Red" FontSize="12"/>
+                                                                        <!--<Span Text=" - " TextColor="Red" FontSize="12"/>
+                                                                        <Span Text="{Binding FinishTime, StringFormat='{0:HH:mm}'}" TextColor="Red" FontSize="12"/>-->
+                                                                    </FormattedString.Spans>
+                                                                </FormattedString>
+                                                            </Label.FormattedText>
+                                                        </Label>
+                                                    </StackLayout>
+
+                                                    <Path Grid.Column="1" Style="{StaticResource PathStyle}" Data="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" HeightRequest="18" WidthRequest="18"
+                                                          Fill="{StaticResource PrimaryColor}" HorizontalOptions="Center" VerticalOptions="Center">
+                                                        <Path.Triggers>
+                                                            <DataTrigger TargetType="Path" Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}" Value="True">
+                                                                <Setter Property="Data" Value="M6.582 12.141a.695.695 0 0 1-.978 0a.68.68 0 0 1 0-.969l3.908-3.83a.697.697 0 0 1 .979 0l3.908 3.83a.68.68 0 0 1 0 .969a.697.697 0 0 1-.979 0L10 9l-3.418 3.141z" />
+                                                            </DataTrigger>
+                                                            <DataTrigger TargetType="Path" Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}" Value="False">
+                                                                <Setter Property="Data" Value="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" />
+                                                            </DataTrigger>
+                                                        </Path.Triggers>
+                                                    </Path>
+                                                </Grid>
+                                            </Grid>
+                                        </SwipeView>
+                                    </xct:Expander.Header>
+                                    <Grid RowDefinitions="Auto,*,50" RowSpacing="10" 
+                                          HorizontalOptions="FillAndExpand" Margin="5" VerticalOptions="Start">
+                                        <BoxView Grid.Row="0" BackgroundColor="#F2F4F8" HeightRequest="1" 
+                                                     HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
+                                        <xct:Expander Grid.Row="1" HorizontalOptions="StartAndExpand" VerticalOptions="Start">
+                                            <xct:Expander.Header>
+                                                <Grid ColumnDefinitions="50,*,50" ColumnSpacing="0" Margin="0,5,0,5" VerticalOptions="CenterAndExpand">
+                                                    <Path Grid.Column="0" Style="{StaticResource PathStyle}" Data="M10 0a7.65 7.65 0 0 0-8 8c0 2.52 2 5 3 6s5 6 5 6s4-5 5-6s3-3.48 3-6a7.65 7.65 0 0 0-8-8zm0 11.25A3.25 3.25 0 1 1 13.25 8A3.25 3.25 0 0 1 10 11.25z" HeightRequest="24" WidthRequest="24"
+                                                                       Fill="{StaticResource PrimaryColor}" HorizontalOptions="Center" VerticalOptions="Center">
+
+                                                    </Path>
+
+                                                    <StackLayout Grid.Column="1" Spacing="10">
+                                                        <!--Address-->
+                                                        <Label Text="{Binding DeliveryInfo.PicAddress}" TextColor="Black" FontSize="15"/>
+                                                        <Label Text="{Binding DeliveryInfo.FilePath}" TextColor="#2F3246" FontSize="12" Margin="0,-10,0,0"/>
+                                                        <!--ScheduleDetails-->
+                                                        <Label FontSize="12" Margin="0,0,0,0">
+                                                            <Label.FormattedText>
+                                                                <FormattedString>
+                                                                    <FormattedString.Spans>
+                                                                        <Span Text="{Binding DeliveryInfo.TimeDelivery, StringFormat='{0:HH:mm}'}" TextColor="Red" FontSize="12"/>
+                                                                        <Span Text=" - " TextColor="Black" FontSize="12"/>
+                                                                        <Span Text="{Binding DeliveryInfo.TimeDelivery, StringFormat='{0:dd/MM/yyy}'}" TextColor="Black" FontSize="12"/>
+                                                                        <!--<Span Text=" to " TextColor="Black" FontSize="12"/>
+                                                                                    <Span Text="{Binding FinishTime, StringFormat='{0:HH:mm}'}" TextColor="Red" FontSize="12"/>
+                                                                                    <Span Text=" - " TextColor="Black" FontSize="12"/>
+                                                                                    <Span Text="{Binding FinishTime, StringFormat='{0:dd/MM/yyy}'}" TextColor="Black" FontSize="12"/>-->
+
+                                                                    </FormattedString.Spans>
+                                                                </FormattedString>
+                                                            </Label.FormattedText>
+                                                        </Label>
+                                                    </StackLayout>
+
+                                                    <Path Grid.Column="2" Style="{StaticResource PathStyle}" Data="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" HeightRequest="18" WidthRequest="18"
+                                                                      Fill="{StaticResource PrimaryColor}" HorizontalOptions="Center" VerticalOptions="Center">
+                                                        <Path.Triggers>
+                                                            <DataTrigger TargetType="Path" Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}" Value="True">
+                                                                <Setter Property="Data" Value="M6.582 12.141a.695.695 0 0 1-.978 0a.68.68 0 0 1 0-.969l3.908-3.83a.697.697 0 0 1 .979 0l3.908 3.83a.68.68 0 0 1 0 .969a.697.697 0 0 1-.979 0L10 9l-3.418 3.141z" />
+                                                            </DataTrigger>
+                                                            <DataTrigger TargetType="Path" Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}" Value="False">
+                                                                <Setter Property="Data" Value="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" />
+                                                            </DataTrigger>
+                                                        </Path.Triggers>
+                                                    </Path>
+                                                </Grid>
+                                            </xct:Expander.Header>
+                                            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" Margin="0,0,0,10">
+                                                <Grid Margin="0" RowDefinitions="Auto,Auto,*" RowSpacing="10">
+                                                    <BoxView Margin="50,0,0,0" Grid.Row="0" BackgroundColor="#F2F4F8" HeightRequest="1" HorizontalOptions="FillAndExpand" 
+                                                                            VerticalOptions="Center"/>
+                                                    <StackLayout Grid.Row="1" Spacing="10" Orientation="Horizontal" Margin="50,0,0,0">
+                                                        <Path Style="{StaticResource PathStyle}" 
+                                                                                    Data="M854.6 288.6L639.4 73.4c-6-6-14.1-9.4-22.6-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.7-9.4-22.7zM790.2 326H602V137.8L790.2 326zm1.8 562H232V136h302v216a42 42 0 0 0 42 42h216v494zM504 618H320c-4.4 0-8 3.6-8 8v48c0 4.4 3.6 8 8 8h184c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8zM312 490v48c0 4.4 3.6 8 8 8h384c4.4 0 8-3.6 8-8v-48c0-4.4-3.6-8-8-8H320c-4.4 0-8 3.6-8 8z" 
+                                                                                    HeightRequest="20" WidthRequest="20"
+                                                                                    Fill="{StaticResource PrimaryColor}" 
+                                                                                    HorizontalOptions="Center" VerticalOptions="Center"/>
+                                                        <Label Text="Items" TextColor="{StaticResource PrimaryColor}" FontSize="12"/>
+                                                    </StackLayout>
+
+                                                    <StackLayout Grid.Row="2" Spacing="10"  BindableLayout.ItemsSource="{Binding DeliveryInfo.ListStorage}"
+                                                                                HorizontalOptions="StartAndExpand" VerticalOptions="Start" Margin="80,0,0,0">
+                                                        <BindableLayout.ItemTemplate>
+                                                            <DataTemplate x:DataType="{x:Type Models:Storage}">
+                                                                <Label  TextColor="Black" FontSize="15">
+                                                                    <Label.FormattedText>
+                                                                        <FormattedString>
+                                                                            <FormattedString.Spans>
+                                                                                <Span Text="{Binding Name}" TextColor="Black" FontSize="15"/>
+                                                                                <Span Text=" - " TextColor="Black" FontSize="15"/>
+                                                                                <Span Text="{Binding Amount}" TextColor="Black" FontSize="15"/>
+                                                                            </FormattedString.Spans>
+                                                                        </FormattedString>
+                                                                    </Label.FormattedText>
+                                                                </Label>
+                                                            </DataTemplate>
+                                                        </BindableLayout.ItemTemplate>
+                                                    </StackLayout>
+                                                </Grid>
+
+                                                <Grid Margin="0" RowDefinitions="Auto,Auto,*" RowSpacing="10">
+                                                    <BoxView Margin="50,0,0,0" Grid.Row="0" BackgroundColor="#F2F4F8" HeightRequest="1" HorizontalOptions="FillAndExpand" 
+                                                                            VerticalOptions="Center"/>
+                                                    <StackLayout Grid.Row="1" Spacing="10" Orientation="Horizontal" Margin="50,0,0,0">
+                                                        <Path Style="{StaticResource PathStyle}" 
+                                                                                    Data="M15.5 12.25a.75.75 0 0 0-.75-.75h-5a.75.75 0 0 0-.75.75v.5c0 1 1.383 1.75 3.25 1.75s3.25-.75 3.25-1.75v-.5ZM14 8.745C14 7.78 13.217 7 12.25 7s-1.75.779-1.75 1.745a1.75 1.75 0 1 0 3.5 0ZM4 4.5A2.5 2.5 0 0 1 6.5 2H18a2.5 2.5 0 0 1 2.5 2.5v14.25a.75.75 0 0 1-.75.75H5.5a1 1 0 0 0 1 1h13.25a.75.75 0 0 1 0 1.5H6.5A2.5 2.5 0 0 1 4 19.5v-15Zm1.5 0V18H19V4.5a1 1 0 0 0-1-1H6.5a1 1 0 0 0-1 1Z" 
+                                                                                    HeightRequest="20" WidthRequest="20"
+                                                                                    Fill="{StaticResource PrimaryColor}" 
+                                                                                    HorizontalOptions="Center" VerticalOptions="Center"/>
+                                                        <Label Text="Contact" TextColor="{StaticResource PrimaryColor}" FontSize="12"/>
+                                                    </StackLayout>
+                                                    <Label Grid.Row="2"  Text="{Binding DeliveryInfo.PicPhone}" TextColor="Black" FontSize="15" Margin="80,0,0,0">
+                                                        <Label.FormattedText>
+                                                            <FormattedString>
+                                                                <FormattedString.Spans>
+                                                                    <Span Text="{Binding DeliveryInfo.PicContactName}" TextColor="Black" FontSize="15"/>
+                                                                    <Span Text=" - " TextColor="Black" FontSize="15"/>
+                                                                    <Span Text="{Binding DeliveryInfo.PicPhone}" TextColor="Black" FontSize="15"/>
+                                                                </FormattedString.Spans>
+                                                            </FormattedString>
+                                                        </Label.FormattedText>
+                                                    </Label>
+                                                </Grid>
+
+                                                <Grid Margin="0" RowDefinitions="Auto,Auto,*" RowSpacing="10">
+                                                    <BoxView Margin="50,0,0,0" Grid.Row="0" BackgroundColor="#F2F4F8" HeightRequest="1" HorizontalOptions="FillAndExpand" 
+                                                                            VerticalOptions="Center"/>
+                                                    <StackLayout Grid.Row="1" Spacing="10" Orientation="Horizontal" Margin="50,0,0,0">
+                                                        <Path Style="{StaticResource PathStyle}" 
+                                                                                    Data="M3 10h11v2H3v-2zm0-2h11V6H3v2zm0 8h7v-2H3v2zm15.01-3.13l.71-.71a.996.996 0 0 1 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-.71.71l-2.12-2.12zm-.71.71l-5.3 5.3V21h2.12l5.3-5.3l-2.12-2.12z" 
+                                                                                    HeightRequest="20" WidthRequest="20"
+                                                                                    Fill="{StaticResource PrimaryColor}" 
+                                                                                    HorizontalOptions="Center" VerticalOptions="Center"/>
+                                                        <Label Text="Notes" TextColor="{StaticResource PrimaryColor}" FontSize="12"/>
+                                                    </StackLayout>
+                                                    <Label Grid.Row="2"  Text="{Binding DeliveryInfo.PicNotes}" TextColor="Black" FontSize="15" Margin="80,0,0,0"/>
+                                                </Grid>
+                                            </StackLayout>
+                                        </xct:Expander>
+                                        <Grid Grid.Row="2" HeightRequest="50" ColumnSpacing="0" Margin="0" Padding="0"
+                                              HorizontalOptions="FillAndExpand" VerticalOptions="Center"
+                                              ColumnDefinitions="Auto,*,Auto">
+                                            <Label Grid.Column="0" HorizontalOptions="End"
+                                                   VerticalOptions="Center" HorizontalTextAlignment="End"
+                                                   VerticalTextAlignment="Center" TextColor="{StaticResource PrimaryColor}"  FontSize="{StaticResource MediumFontSize}"
+                                                   Text="Print" FontAttributes="Bold">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="ButtonPrint_Tapped"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                            <Label Grid.Column="2" HorizontalOptions="End"
+                                                   VerticalOptions="Center" HorizontalTextAlignment="End"
+                                                   VerticalTextAlignment="Center" TextColor="{StaticResource PrimaryColor}"  FontSize="{StaticResource MediumFontSize}"
+                                                   Text="Edit" FontAttributes="Bold">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="ButtonEdit_Tapped"/>
+                                                </Label.GestureRecognizers>
+                                            </Label>
+                                        </Grid>
+                                    </Grid>
+                                </xct:Expander>
+                            </Grid>
+                        </pv:PancakeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <!--#endregion-->
+
+            <!--#region Footer-->
+            <Grid Grid.Row="2" HeightRequest="50" ColumnSpacing="0" Margin="0" Padding="3"
+                  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="{StaticResource PageBackgroundColor}"
+                  ColumnDefinitions="50,*,50">
+                <Button Grid.Column="0" CornerRadius="25" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="Transparent"
+                        xct:TouchEffect.PressedScale="1.01" xct:TouchEffect.NativeAnimation="True" 
+                        Clicked="ButtonCalendar_Clicked">
+                    <Button.ImageSource>
+                        <FontImageSource Color="{StaticResource PrimaryColor}" FontFamily="FAL" Glyph="{x:Static fontIcon:FontAwesomeIcons.Calendar}"/>
+                    </Button.ImageSource>
+                </Button>
+                <Button Grid.Column="1" CornerRadius="10" HorizontalOptions="Center" VerticalOptions="Center" BackgroundColor="#FFF"
+                        Clicked="ButtonAddAccordion_Clicked" HeightRequest="50" WidthRequest="120">
+                    <Button.ImageSource>
+                        <FontImageSource Color="{StaticResource PrimaryColor}" FontFamily="FAL" Glyph="{x:Static fontIcon:FontAwesomeIcons.Plus}"/>
+                    </Button.ImageSource>
+                </Button>
+            </Grid>
+            <!--#endregion-->
+        </Grid>
+        <!--#region Watting-->
+        <Grid Style="{StaticResource GridLoadingStyle}" IsVisible="{Binding IsRunningAnimation}">
+            <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
+                <ActivityIndicator IsVisible="{Binding IsRunningAnimation}" IsRunning="{Binding IsRunningAnimation}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Label Style="{StaticResource LableWaitingStyle}"/>
+            </StackLayout>
+        </Grid>
+        <!--#endregion Watting-->
+    </Grid>
+   
+</ContentPage>
