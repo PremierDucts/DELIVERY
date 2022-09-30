@@ -1,5 +1,6 @@
 ﻿using DeliveryMobile.Base;
 using DeliveryMobile.Models;
+using DeliveryMobile.ServerManager.PremierDuctsServer.APIModels;
 using DeliveryMobile.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,6 @@ namespace DeliveryMobile.Views
         private EventCalendarDeliveryViewModel ViewModel = null;
         private List<SwipeView> swipeViews { set; get; } = null;
         private Event eventSelect { set; get; } = null;
-        private AccordionPage accordionPage = new AccordionPage(new AccordionViewModel());
         public EventCalendarDeliveryPage()
         {
             InitializeComponent();
@@ -74,23 +74,22 @@ namespace DeliveryMobile.Views
 
         private void AccordionPage_Disappearing(object sender, System.EventArgs e)
         {
-            if (Global.Instance.IsSave)
-            {
-                if (accordionPage.ViewModel != null)
-                {
-                    if (!String.IsNullOrEmpty(accordionPage.ViewModel.JobNo))
-                        eventSelect.DeliveryInfos = accordionPage.ViewModel.DeliveryInfos;
-                    else
-                    {
-                        ViewModel.Events.Add(new Event()
-                        {
-                            JobNo = "New Item",
-                            DeliveryInfos = accordionPage.ViewModel.DeliveryInfos
-                        });
-                    }
-                }
+            //if (Global.Instance.IsSave)
+            //{
+            //    if (accordionPage.ViewModel != null)
+            //    {
+            //        if (!String.IsNullOrEmpty(accordionPage.ViewModel.JobNo) && !accordionPage.ViewModel.JobNo.Equals("New Delivery"))
+            //            eventSelect.DeliveryInfo = accordionPage.ViewModel.Config;
+            //        else
+            //        {
+            //            ViewModel.Events.Add(new Event()
+            //            {
+            //                DeliveryInfo = accordionPage.ViewModel.Config
+            //            });
+            //        }
+            //    }
 
-            }
+            //}
         }
 
         private void SwipePrint_Invoked(object sender, EventArgs e)
@@ -99,24 +98,21 @@ namespace DeliveryMobile.Views
         }
         private async void HandelEdit(Event ev)
         {
-            ViewModel.IsRunningAnimation = true;
-            await Task.Delay(1);
-            var viewModelAccordionPage = new AccordionViewModel()
-            {
-                DeliveryInfos = ev.DeliveryInfos,
-                JobNo = ev.JobNo,
-            };
-            accordionPage = new AccordionPage(viewModelAccordionPage);
-            accordionPage.Disappearing += AccordionPage_Disappearing;
-            await Shell.Current.Navigation.PushModalAsync(accordionPage);
-            ViewModel.IsRunningAnimation = false;
+            //ViewModel.IsRunningAnimation = true;
+            //await Task.Delay(1);
+            //accordionPage = new AccordionPage(ev.DeliveryInfo.Config);
+            //accordionPage.ViewModel.JobNo = ev.JobNo;
+            //accordionPage.Disappearing += AccordionPage_Disappearing;
+            //await Shell.Current.Navigation.PushModalAsync(accordionPage);
+            //ViewModel.IsRunningAnimation = false;
         }
 
         private async void HandelAdd()
         {
             ViewModel.IsRunningAnimation = true;
             await Task.Delay(1);
-            accordionPage = new AccordionPage(new AccordionViewModel());
+            var accordionPage = new AccordionPage(new DeliveryOrder());
+            accordionPage.ViewModel.JobNo = "New Delivery";
             accordionPage.Disappearing += AccordionPage_Disappearing;
             await Shell.Current.Navigation.PushModalAsync(accordionPage);
             ViewModel.IsRunningAnimation = false;

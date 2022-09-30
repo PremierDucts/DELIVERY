@@ -30,5 +30,18 @@ namespace DeliveryMobile.Utility
                 return false;
             }
         }
+
+        public static DateTime ConvertLongToDateTime(long time)
+        {
+            try
+            {
+                DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                return start.AddMilliseconds(time).ToLocalTime();
+            }
+            catch (Exception)
+            {
+                return DateTime.MinValue;
+            }
+        }
     }
 }

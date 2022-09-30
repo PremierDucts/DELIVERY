@@ -1,7 +1,9 @@
 ﻿using DeliveryMobile.Base;
 using DeliveryMobile.Models;
+using DeliveryMobile.ServerManager.PremierDuctsServer.APIModels;
 using DeliveryMobile.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -14,10 +16,10 @@ namespace DeliveryMobile.Views
     public partial class AccordionPage : ContentPage
     {
         public AccordionViewModel ViewModel = null;
-        public AccordionPage(AccordionViewModel viewModel)
+        public AccordionPage(DeliveryOrder cfg = null)
         {
             InitializeComponent();
-            BindingContext = ViewModel = viewModel;
+            BindingContext = ViewModel = new AccordionViewModel(cfg);
         }
         #region [Event handel]
         private async void ButtonCancelAccordion_Tapped(object sender, EventArgs e)
@@ -58,9 +60,9 @@ namespace DeliveryMobile.Views
 
                             });
 
-                            item.DesPhone = phones.ToString();
-                            item.DesContactName = result.DisplayName;
-                            item.DesEmailAddress = emails.ToString();
+                            item.Phone = phones.ToString();
+                            item.Name = result.DisplayName;
+                            item.Email = emails.ToString();
                         }
                     }
                 }
@@ -75,50 +77,62 @@ namespace DeliveryMobile.Views
             var result = await Contacts.PickContactAsync();
             if (result != null)
             {
-                var obj = sender as Frame;
-                if (obj != null)
+                var phones = new StringBuilder();
+                result.Phones.ForEach(phone =>
                 {
-                    var item = obj.BindingContext as DeliveryInfo;
-                    if (item != null)
-                    {
-                        var phones = new StringBuilder();
-                        result.Phones.ForEach(phone =>
-                        {
-                            if (phones.Length == 0)
-                                phones.Append($"{phone}");
-                            else
-                                phones.Append($" - {phone}");
+                    if (phones.Length == 0)
+                        phones.Append($"{phone}");
+                    else
+                        phones.Append($" - {phone}");
 
-                        });
+                });
 
-                        var emails = new StringBuilder();
-                        result.Emails.ForEach(email =>
-                        {
-                            if (emails.Length == 0)
-                                emails.Append($"{email}");
-                            else
-                                emails.Append($" - {email}");
+                var emails = new StringBuilder();
+                result.Emails.ForEach(email =>
+                {
+                    if (emails.Length == 0)
+                        emails.Append($"{email}");
+                    else
+                        emails.Append($" - {email}");
 
-                        });
+                });
 
-                        item.PicPhone = phones.ToString();
-                        item.PicContactName = result.DisplayName;
-                        item.PicEmailAddress = emails.ToString();
-                    }
-                }
+                ViewModel.Phone = phones.ToString();
+                ViewModel.Name = result.DisplayName;
+                ViewModel.Email = emails.ToString();
             }
         }
 
 
         private async void ButtonSave_Clicked(object sender, EventArgs e)
         {
-            Global.Instance.IsSave = true;
+            #region Update value before create
+            var listItem = new List<ItemDelivery>
+            {
+                new ItemDelivery()
+                {
+                     DepthDim = "test",
+                     Description= "test",
+                     Handle = "test",
+                     Insulationarea = "test",
+                     Itemno = "test",
+                     Jobno = "test",
+                     Lengthangle = "test",
+                     Metalarea = "test",
+                     StorageInfo = "test",
+                     WidthDim = "test",
+                }
+            };
+            ViewModel.Config.Items.AddRange(listItem);
+            #endregion
+
+            ViewModel.CreateOrder(ViewModel.Config);
             await Navigation.PopModalAsync();
         }
 
         private void ButtonAddDestination_Tapped(object sender, EventArgs e)
         {
-            ViewModel.DeliveryInfos.Add(new DeliveryInfo());
+            ViewModel.Destinations.Add(new Destination(new DeliveryPoint()));
             ViewModel.UpdateButtonSave();
         }
 
@@ -126,17 +140,21 @@ namespace DeliveryMobile.Views
         {
             if (await Application.Current.MainPage.DisplayAlert("", "Delete all destination?", "Yes", "Cancel"))
             {
-                ViewModel.DeliveryInfos.Clear();
+                ViewModel.Destinations.Clear();
                 ViewModel.UpdateButtonSave();
             }
         }
 
         private void ButtonAddStorage_Clicked(object sender, EventArgs e)
         {
-            var obj = sender as Button;
-            var item = obj.BindingContext as DeliveryInfo;
-            item.ListStorage.Add(new Storage());
+            ViewModel.ListStorage.Add(new Storage());
         }
         #endregion
+
+
+        private void Cage_Tapped(object sender, EventArgs e)
+        {
+
+        }
     }
 }

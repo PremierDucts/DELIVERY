@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DeliveryMobile.CoreUti;
+using DeliveryMobile.ServerManager.PremierDuctsServer.APIModels;
+using DeliveryMobile.Utility;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -7,69 +10,71 @@ namespace DeliveryMobile.Models
 {
     public class DeliveryInfo : BaseObservableModel
     {
+        public DeliveryInfo(DeliveryOrder cfg = null)
+        {
+            if (cfg != null)
+                Config = ObjectExtension.CloneByJson(cfg);
+        }
+
+        public DeliveryOrder Config { get; set; } = new DeliveryOrder();
+
         #region Picup
-        private String _picAddress = "";
         public String PicAddress
         {
-            get => _picAddress;
+            get => Config.Pickup.AddressDetail;
             set
             {
-                _picAddress = value;
+                Config.Pickup.AddressDetail = value;
                 OnPropertyChanged("PicAddress");
             }
         }
 
-        private String _picContactName = "";
         public String PicContactName
         {
-            get => _picContactName;
+            get => Config.Pickup.Name;
             set
             {
-                _picContactName = value;
+                Config.Pickup.Name = value;
                 OnPropertyChanged("PicContactName");
             }
         }
 
-        private String _picCompanyName = "";
         public String PicCompanyName
         {
-            get => _picCompanyName;
+            get => Config.Pickup.CompanyName;
             set
             {
-                _picCompanyName = value;
+                Config.Pickup.CompanyName = value;
                 OnPropertyChanged("PicCompanyName");
             }
         }
 
-        private String _picPhone = "";
         public String PicPhone
         {
-            get => _picPhone;
+            get => Config.Pickup.Phone;
             set
             {
-                _picPhone = value;
+                Config.Pickup.Phone = value;
                 OnPropertyChanged("PicPhone");
             }
         }
 
-        private String _picEmailAddress = "";
         public String PicEmailAddress
         {
-            get { return _picEmailAddress; }
+            get { return Config.Pickup.Email; }
             set
             {
-                _picEmailAddress = value;
+                Config.Pickup.Email = value;
                 OnPropertyChanged("PicEmailAddress");
             }
         }
 
-        private String _picNotes = "";
         public String PicNotes
         {
-            get { return _picNotes; }
+            get { return Config.Pickup.Notes; }
             set
             {
-                _picNotes = value;
+                Config.Pickup.Notes = value;
                 OnPropertyChanged("PicNotes");
             }
         }
@@ -97,13 +102,12 @@ namespace DeliveryMobile.Models
             }
         }
 
-        private DateTime _timeDelivery = DateTime.Today;
         public DateTime TimeDelivery
         {
-            get => _timeDelivery;
+            get => UtilityFunctions.ConvertLongToDateTime(Config.Pickup.PlanningTime);
             set
             {
-                _timeDelivery = value;
+                Config.Pickup.PlanningTime = value.Ticks;
                 OnPropertyChanged("TimeDelivery");
             }
         }

@@ -94,6 +94,10 @@ namespace DeliveryMobile.WebAPIClient.Utility
                     return true;
                 else if (resData.Data.GetType() == typeof(JArray))
                     resData.Data = ((JArray)resData.Data).ToObject<T>();
+                else if (resData.Data.GetType() == typeof(JContainer))
+                    resData.Data = ((JObject)resData.Data).ToObject<T>();
+                else if (resData.Data.GetType() == typeof(JObject))
+                    resData.Data = ((JObject)resData.Data).ToObject<T>();
                 else if (resData.Data.GetType() == typeof(Object))
                     resData.Data = ((JObject)resData.Data).ToObject<T>();
                 return true;
