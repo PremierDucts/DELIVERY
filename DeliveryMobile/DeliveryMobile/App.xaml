@@ -6,6 +6,7 @@
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core">
     <Application.Resources>
+        <Color x:Key="AwaitColor">#4F000000</Color>
         <Color x:Key="PrimaryColor">#2060FF</Color>
         <Color x:Key="HeaderPrimaryColor">#9F2060FF</Color>
         <Color x:Key="TertiaryColor">#A0A0FF</Color>
@@ -86,6 +87,7 @@
         <Style TargetType="{x:Type Picker}">
             <Setter Property="TextColor" Value="{StaticResource ContentTextColor}"/>
             <Setter Property="FontSize" Value="{StaticResource SmallFontSize}"/>
+            <Setter Property="ios:Picker.UpdateMode" Value="WhenFinished"/>
         </Style>
 
         <Style TargetType="{x:Type Switch}">
@@ -97,7 +99,7 @@
             <Setter Property="ColumnSpacing" Value="0"/>
             <Setter Property="RowSpacing" Value="0"/>
         </Style>
-        
+
         <!--#region [Common Style]-->
         <Style x:Key="HeaderLabelStyle" TargetType="{x:Type Label}">
             <Setter Property="TextColor" Value="{StaticResource ContentTextColor}"/>
@@ -121,7 +123,7 @@
             <Setter Property="VerticalOptions" Value="Center"/>
             <Setter Property="FontSize" Value="Small"/>
             <Setter Property="FontAttributes" Value="Italic"/>
-            <Setter Property="TextColor" Value="#000"/>
+            <Setter Property="TextColor" Value="{StaticResource PrimaryColor}"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="LineBreakMode" Value="CharacterWrap"/>
             <Setter Property="Text" Value="Please wait..."/>

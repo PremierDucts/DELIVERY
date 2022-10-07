@@ -50,6 +50,43 @@ namespace DeliveryMobile.WebAPIClient.Utility
             catch (Exception ex) { Debug.WriteLine(ex.Message); return null; }
         }
 
+        public static String SendPutRequest(String requestUrl, Object postObj, Dictionary<String, String> headerParams = null, int timeOut = 30000)
+        {
+            try
+            {
+                var clientHandler = new HttpClientHandler();
+                clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+                using (var client = new HttpClient(clientHandler))
+                {
+                    PreProcess(client, headerParams, timeOut);
+                    requestUrl = BuildParams(requestUrl, headerParams);
+                    String jsonData = JsonConvert.SerializeObject(postObj);
+                    var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                    var response = client.PutAsync(requestUrl, content).Result;
+                    return response.Content.ReadAsStringAsync().Result;
+                }
+            }
+            catch (Exception ex) { Debug.WriteLine(ex.Message); return null; }
+        }
+
+        public static String SendDeleteRequest(String requestUrl, Dictionary<String, String> headerParams = null,
+            int timeOut = 3000)
+        {
+            try
+            {
+                var clientHandler = new HttpClientHandler();
+                clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+                using (var client = new HttpClient(clientHandler))
+                {
+                    PreProcess(client, headerParams, timeOut);
+                    requestUrl = BuildParams(requestUrl, headerParams);
+                    var response = client.DeleteAsync(requestUrl).Result;
+                    return response.Content.ReadAsStringAsync().Result;
+                }
+            }
+            catch (Exception ex) { return null; }
+        }
+
         private static void PreProcess(HttpClient client, Dictionary<String, String> headerParams, int timeOut)
         {
             client.Timeout = TimeSpan.FromMilliseconds(timeOut);

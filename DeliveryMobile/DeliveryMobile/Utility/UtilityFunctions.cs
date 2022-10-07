@@ -30,15 +30,14 @@ namespace DeliveryMobile.Utility
                 return false;
             }
         }
-
-        public static DateTime ConvertLongToDateTime(long time)
+        
+        public static DateTime ConvertLongToDateTime(long ticks)
         {
             try
             {
-                DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                return start.AddMilliseconds(time).ToLocalTime();
+                return new DateTime(ticks);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return DateTime.MinValue;
             }

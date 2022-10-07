@@ -6,7 +6,8 @@ namespace DeliveryMobile.ServerManager.PremierDuctsServer.APIModels
 {
     public class DeliveryOrder
     {
-        public Pickup Pickup { get; set; } = new Pickup();
+        public String Id { get; set; } = "";
+        public Pickup PickupPoint { get; set; } = new Pickup();
         public List<ItemDelivery> Items { get; set; } = new List<ItemDelivery>();
         public List<DeliveryPoint> DeliveryPoints { get; set; } = new List<DeliveryPoint>();
     }

@@ -209,8 +209,8 @@ namespace DeliveryMobile.WebAPIClient.DeliveryServer
             CREATE_ORDER,
             DELETE_ORDER,
             UPDATE_ORDER,
-
             GET_ALL_CAGES,
+            GET_ALL_ITEM,
             #endregion
 
         }
@@ -245,11 +245,12 @@ namespace DeliveryMobile.WebAPIClient.DeliveryServer
                 #endregion
 
                 #region [DELIVERY]
-                {PREMIER_DUCTS_SERVER_API_TYPE.GET_ORDER, "api/Order"},
+                {PREMIER_DUCTS_SERVER_API_TYPE.GET_ORDER, "api/Order/list"},
                 {PREMIER_DUCTS_SERVER_API_TYPE.CREATE_ORDER, "api/Order/create"},
-                {PREMIER_DUCTS_SERVER_API_TYPE.UPDATE_ORDER, "api/Update"},
-                {PREMIER_DUCTS_SERVER_API_TYPE.DELETE_ORDER, "api/Delete"},
+                {PREMIER_DUCTS_SERVER_API_TYPE.UPDATE_ORDER, "api/Order"},
+                {PREMIER_DUCTS_SERVER_API_TYPE.DELETE_ORDER, "api/Order"},
                 {PREMIER_DUCTS_SERVER_API_TYPE.GET_ALL_CAGES, "cages/all"},
+                {PREMIER_DUCTS_SERVER_API_TYPE.GET_ALL_ITEM, "cage/items/all"},
                 #endregion
             };
         }

@@ -8,7 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
 using XCalendar.Core.Enums;
 using XCalendar.Core.Models;
@@ -66,39 +68,62 @@ namespace DeliveryMobile.ViewModels
         {
             NavigateCalendarCommand = new Command<int>(NavigateCalendar);
             ChangeDateSelectionCommand = new Command<DateTime>(ChangeDateSelection);
-            var orders = GetOrder();
-            foreach (var item in orders) { }
-            foreach (Event Event in Events)
-            {
-                Event.TimeDelivery = DateTime.Today.AddDays(Random.Next(-20, 21)).AddSeconds(Random.Next(86400));
-                Event.Color = Colors[Random.Next(6)];
-            }
-
+            EventCalendar.SelectedDates.CollectionChanged -= SelectedDates_CollectionChanged;
             EventCalendar.SelectedDates.CollectionChanged += SelectedDates_CollectionChanged;
+            EventCalendar.DaysUpdated -= EventCalendar_DaysUpdated;
             EventCalendar.DaysUpdated += EventCalendar_DaysUpdated;
+            UpdateData();
+            MessagingCenter.Subscribe<String>("UPDATE_ORDER", "UPDATE_ORDER", (str) => UpdateData());
+        }
+
+        public async void UpdateData()
+        {
+            IsRunningAnimation = true;
+            await Task.Delay(1);
+            var orders = GetOrder();
+            Events.Clear();
+            SelectedEvents.Clear();
+            foreach (var cfg in orders)
+                Events.Add(new Event(cfg));
+            foreach (Event Event in Events)
+                Event.Color = Colors[Random.Next(6)];
             var index = 0;
             foreach (var Day in EventCalendar.Days)
             {
-                var listEvents = Events.Where(x => x.TimeDelivery.Date == Day.DateTime.Date);
+                var listEvents = Events.Where(x => x.PlanningTime.Date == Day.DateTime.Date);
                 var color = ColorsOnDay[Random.Next(12)];
                 foreach (var ev in listEvents)
                     ev.CurrentDayColor = color;
                 Day.Events.ReplaceRange(listEvents);
                 index++;
             }
+            IsRunningAnimation = false;
         }
 
-        private void SelectedDates_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void SelectedDates_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            SelectedEvents.ReplaceRange(Events.Where(x => EventCalendar.SelectedDates.Any(y => x.TimeDelivery.Date == y.Date)).OrderBy(x => x.TimeDelivery).ThenBy(z => z.TimeDelivery.TimeOfDay));
+            IsRunningAnimation = true;
+            await Task.Delay(1);
+            SelectedEvents.ReplaceRange(Events.Where(x => EventCalendar.SelectedDates.Any(y => x.PlanningTime.Date == y.Date)).OrderBy(x => x.PlanningTime).ThenBy(z => z.PlanningTime.TimeOfDay));
+            IsRunningAnimation = false;
         }
         #endregion
 
         #region Methods
+        public async void DeleteOrder(String id)
+        {
+            IsRunningAnimation = true;
+            await Task.Delay(1);
+            var result = CommonAPI.DeleteOrder(new ServerConnectInfo { Address = Global.Instance.DeliveryAddress }, id);
+            if (result.Code == PRE_SERVER_RETURN_CODE.Ok)
+                MessagingCenter.Send<String>("UPDATE_ORDER", "UPDATE_ORDER");
+            IsRunningAnimation = false;
+            await Shell.Current.DisplayToastAsync(result.Code.ToString());
+        }
 
         private List<DeliveryOrder> GetOrder()
         {
-            var result = CommonAPI.GetOrder(new ServerConnectInfo { Address = Global.Instance.DeliveryAddress }, 1661996551, 1664502151);
+            var result = CommonAPI.GetOrder(new ServerConnectInfo { Address = Global.Instance.DeliveryAddress }, 0, 0);
             if (result.Code != PRE_SERVER_RETURN_CODE.Ok)
                 return new List<DeliveryOrder>();
            return result.Data as List<DeliveryOrder>;
@@ -107,9 +132,7 @@ namespace DeliveryMobile.ViewModels
         private void EventCalendar_DaysUpdated(object sender, EventArgs e)
         {
             foreach (var Day in EventCalendar.Days)
-            {
-                Day.Events.ReplaceRange(Events.Where(x => x.TimeDelivery.Date == Day.DateTime.Date));
-            }
+                Day.Events.ReplaceRange(Events.Where(x => x.PlanningTime.Date == Day.DateTime.Date));
         }
         public void NavigateCalendar(int Amount)
         {

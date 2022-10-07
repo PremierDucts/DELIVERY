@@ -9,9 +9,9 @@ namespace DeliveryMobile.WebAPIClient.DeliveryServer
     public static class DeliveryServerAPI
     {
         public static PreServerResponseData RequestApiProc<T>(ServerConnectInfo svrInfo,
-            PREMIER_DUCTS_SERVER_API_TYPE apiType, Dictionary<String, String> listParams = null, Object postObj = null)
+            PREMIER_DUCTS_SERVER_API_TYPE apiType, HttpType httpType, Dictionary<String, String> listParams = null, Object postObj = null)
         {
-            var res = CommonFuncs.RequestApi<T>(svrInfo, PremierDuctsServerApiBase.HttpCommands[apiType], GetApiTimeOut(apiType), listParams, postObj);
+            var res = CommonFuncs.RequestApi<T>(svrInfo, PremierDuctsServerApiBase.HttpCommands[apiType], GetApiTimeOut(apiType), httpType, listParams, postObj);
             if (res.IsFailed())
                 return new PreServerResponseData { Code = PRE_SERVER_RETURN_CODE.FAIL, Data = res.Data };
             else
@@ -22,7 +22,7 @@ namespace DeliveryMobile.WebAPIClient.DeliveryServer
         {
             switch (apiType)
             {
-                default: return 10000;
+                default: return 30000;
             }
         }
     }

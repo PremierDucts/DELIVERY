@@ -13,7 +13,11 @@ namespace DeliveryMobile.Models
         public Destination(DeliveryPoint cfg)
         {
             if (cfg != null)
+            {
                 Config = ObjectExtension.CloneByJson(cfg);
+                LoadDataFromConfig();
+            }
+              
         }
         #endregion
 
@@ -130,14 +134,33 @@ namespace DeliveryMobile.Models
             }
         }
 
+        private DateTime _planningTime = DateTime.Now;
         public DateTime PlanningTime
         {
-            get => UtilityFunctions.ConvertLongToDateTime(Config.PlanningTime);
+            get => _planningTime;
             set
             {
-                Config.PlanningTime = value.Ticks;
+                _planningTime = value;
                 OnPropertyChanged("PlanningTime");
             }
+        }
+        public bool _isExpandedDestination = false;
+        public bool IsExpandedDestination
+        {
+            get { return _isExpandedDestination; }
+            set
+            {
+                _isExpandedDestination = value;
+                OnPropertyChanged("IsExpandedDestination");
+            }
+        }
+
+        #endregion
+
+        #region Function
+        private void LoadDataFromConfig()
+        {
+            PlanningTime = UtilityFunctions.ConvertLongToDateTime(Config.PlanningTime);
         }
         #endregion
     }

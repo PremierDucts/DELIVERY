@@ -6,17 +6,18 @@ namespace DeliveryMobile.ServerManager.PremierDuctsServer.APIModels
 {
     public class Pickup
     {
+        public String Id { get; set; } = "";
         public String Name { get; set; } = "";
         public String Phone { get; set; } = "";
-        public String Email { get; set; } = "";
-        public String CompanyName { get; set; } = "";
-        public String AddressDetail { get; set; } = "";
-        public String PostalCode { get; set; } = "";
-        public String City { get; set; } = "";
-        public String State { get; set; } = "";
-        public String Country { get; set; } = "";
-        public String Notes { get; set; } = "";
-        public bool IsDefault { get; set; }
-        public long PlanningTime { get; set; }
+        public String Email { get; set; } = "empty@gmail.com";
+        public String CompanyName { get; set; } = "empty";
+        public String AddressDetail { get; set; } = "empty";
+        public String PostalCode { get; set; } = "empty";
+        public String City { get; set; } = "empty";
+        public String State { get; set; } = "empty";
+        public String Country { get; set; } = "empty";
+        public String Notes { get; set; } = "empty";
+        public bool IsDefault { get; set; } = false;
+        public long PlanningTime { get; set; } = DateTime.Now.Ticks;
     }
 }

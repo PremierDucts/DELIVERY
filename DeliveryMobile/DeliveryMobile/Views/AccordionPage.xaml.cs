@@ -5,6 +5,7 @@ using DeliveryMobile.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Shapes;
@@ -16,10 +17,10 @@ namespace DeliveryMobile.Views
     public partial class AccordionPage : ContentPage
     {
         public AccordionViewModel ViewModel = null;
-        public AccordionPage(DeliveryOrder cfg = null)
+        public AccordionPage(DeliveryOrder cfg = null, bool isUpdate = false)
         {
             InitializeComponent();
-            BindingContext = ViewModel = new AccordionViewModel(cfg);
+            BindingContext = ViewModel = new AccordionViewModel(cfg, isUpdate);
         }
         #region [Event handel]
         private async void ButtonCancelAccordion_Tapped(object sender, EventArgs e)
@@ -59,10 +60,9 @@ namespace DeliveryMobile.Views
                                     emails.Append($" - {email}");
 
                             });
-
                             item.Phone = phones.ToString();
-                            item.Name = result.DisplayName;
-                            item.Email = emails.ToString();
+                            item.Name = String.IsNullOrEmpty(result.DisplayName) ? "Empty name" : result.DisplayName;
+                            item.Email = String.IsNullOrEmpty(emails.ToString()) ? "test@gmail.com" : emails.ToString();
                         }
                     }
                 }
@@ -98,63 +98,79 @@ namespace DeliveryMobile.Views
                 });
 
                 ViewModel.Phone = phones.ToString();
-                ViewModel.Name = result.DisplayName;
-                ViewModel.Email = emails.ToString();
+                ViewModel.Name = String.IsNullOrEmpty(result.DisplayName) ? "Empty name" : result.DisplayName;
+                ViewModel.Email = String.IsNullOrEmpty(emails.ToString()) ? "test@gmail.com" : emails.ToString();
             }
         }
 
 
-        private async void ButtonSave_Clicked(object sender, EventArgs e)
+        private void ButtonSave_Clicked(object sender, EventArgs e)
         {
             #region Update value before create
-            var listItem = new List<ItemDelivery>
+            var deliveryPoints = new List<DeliveryPoint>();
+            foreach (var des in ViewModel.Destinations)
             {
-                new ItemDelivery()
+                deliveryPoints.Add(new DeliveryPoint
+                { 
+                    Name = des.Name,
+                    AddressDetail = des.AddressDetail,
+                    City = des.City,
+                    CompanyName = des.CompanyName,
+                    Country = des.Country,
+                    Email = des.Email,
+                    IsDefault = des.IsDefault,
+                    Notes = des.Email,
+                    Phone = des.Phone,
+                    PlanningTime = des.PlanningTime.Ticks,
+                    PostalCode = des.PostalCode,
+                    State = des.State
+                });
+            }
+
+            var listItem = new List<ItemDelivery>();
+            foreach (var storage in ViewModel.Cages)
+            {
+                foreach (var item in storage.ListStorageDetail)
                 {
-                     DepthDim = "test",
-                     Description= "test",
-                     Handle = "test",
-                     Insulationarea = "test",
-                     Itemno = "test",
-                     Jobno = "test",
-                     Lengthangle = "test",
-                     Metalarea = "test",
-                     StorageInfo = "test",
-                     WidthDim = "test",
+                    if (item.IsSelected)
+                        listItem.Add(item.Config);
                 }
-            };
+            }
+
+            ViewModel.Config.Items.Clear();
+            ViewModel.Config.DeliveryPoints.Clear();
+
+            ViewModel.Config.PickupPoint.PlanningTime = ViewModel.PlanningTime.Ticks;
+            ViewModel.Config.DeliveryPoints.AddRange(deliveryPoints);
             ViewModel.Config.Items.AddRange(listItem);
             #endregion
 
-            ViewModel.CreateOrder(ViewModel.Config);
-            await Navigation.PopModalAsync();
+            ViewModel.AddOrUpdateOrder(ViewModel.Config);
         }
 
-        private void ButtonAddDestination_Tapped(object sender, EventArgs e)
-        {
-            ViewModel.Destinations.Add(new Destination(new DeliveryPoint()));
-            ViewModel.UpdateButtonSave();
-        }
+        private void ButtonAddDestination_Tapped(object sender, EventArgs e) => ViewModel.AddDestination();
 
         private async void ButtonDelete_Tapped(object sender, EventArgs e)
         {
-            if (await Application.Current.MainPage.DisplayAlert("", "Delete all destination?", "Yes", "Cancel"))
+            if (await Application.Current.MainPage.DisplayAlert("", "Delete delivery?", "Yes", "Cancel"))
             {
-                ViewModel.Destinations.Clear();
-                ViewModel.UpdateButtonSave();
+                ViewModel.DeleteOrder(ViewModel.Config.Id);
             }
-        }
-
-        private void ButtonAddStorage_Clicked(object sender, EventArgs e)
-        {
-            ViewModel.ListStorage.Add(new Storage());
         }
         #endregion
 
-
-        private void Cage_Tapped(object sender, EventArgs e)
+        private void ExpandedDelivery_Tapped(object sender, EventArgs e)
         {
+            ViewModel.IsExpandedDelivery = !ViewModel.IsExpandedDelivery;
+        }
 
+        private void ExpandedDestination_Tapped(object sender, EventArgs e)
+        {
+            var obj = sender as Frame;
+            var des = obj.BindingContext as Destination;
+            if (des == null)
+                return;
+            des.IsExpandedDestination = !des.IsExpandedDestination;
         }
     }
 }
