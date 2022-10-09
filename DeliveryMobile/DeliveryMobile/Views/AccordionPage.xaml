@@ -34,398 +34,407 @@
             <Setter Property="FontSize" Value="{StaticResource MediumFontSize}"/>
             <Setter Property="PlaceholderColor" Value="#4F808080"/>
         </Style>
+
+        <Style x:Key="LableStyle" TargetType="{x:Type Label}">
+            <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+            <Setter Property="VerticalOptions" Value="FillAndExpand"/>
+            <Setter Property="HorizontalTextAlignment" Value="Center"/>
+            <Setter Property="VerticalTextAlignment" Value="Center"/>
+            <Setter Property="TextColor" Value="#000"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="FontSize" Value="{StaticResource MediumFontSize}"/>
+        </Style>
     </ContentPage.Resources>
-    <Frame HasShadow="False" CornerRadius="10" BorderColor="#4F808080" Margin="3" 
+    <Grid>
+        <Frame HasShadow="False" CornerRadius="10" BorderColor="#4F808080" Margin="3" 
            Background="#FFF" IsClippedToBounds="True" Padding="5">
-        <Grid RowDefinitions="40,Auto,*,50" RowSpacing="10">
-            <!--#region [Header]-->
-            <Grid Grid.Row="0" HeightRequest="50" ColumnSpacing="0" Margin="0" Padding="0"
+            <Grid RowDefinitions="40,Auto,*,50" RowSpacing="10">
+                <!--#region [Header]-->
+                <Grid Grid.Row="0" HeightRequest="50" ColumnSpacing="0" Margin="0" Padding="0"
                   HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" 
                   ColumnDefinitions="*,50">
-                <Label Grid.Column="0" HorizontalOptions="StartAndExpand"
+                    <Label Grid.Column="0" HorizontalOptions="StartAndExpand"
                         VerticalOptions="FillAndExpand" HorizontalTextAlignment="Start"
                         VerticalTextAlignment="Center" TextColor="#000"
                         FontAttributes="Bold"  FontSize="{StaticResource LargeFontSize}"
                         Text="{Binding JobNo}"/>
-                <Path Grid.Column="1" Style="{StaticResource PathStyle}" HeightRequest="15" WidthRequest="15" Data="M764.288 214.592L512 466.88L259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512L214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z">
-                    <Path.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ButtonCancelAccordion_Tapped"/>
-                    </Path.GestureRecognizers>
-                </Path>
-            </Grid>
-            <!--#endregion-->
+                    <Path Grid.Column="1" Style="{StaticResource PathStyle}" HeightRequest="15" WidthRequest="15" Data="M764.288 214.592L512 466.88L259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512L214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z">
+                        <Path.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="ButtonCancelAccordion_Tapped"/>
+                        </Path.GestureRecognizers>
+                    </Path>
+                </Grid>
+                <!--#endregion-->
 
-            <BoxView Grid.Row="1" HeightRequest="1" BackgroundColor="{StaticResource PrimaryColor}" 
+                <BoxView Grid.Row="1" HeightRequest="1" BackgroundColor="{StaticResource PrimaryColor}" 
                          HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
-            <pv:PancakeView Grid.Row="1" HeightRequest="7" WidthRequest="7"
+                <pv:PancakeView Grid.Row="1" HeightRequest="7" WidthRequest="7"
                             CornerRadius="3.5" BackgroundColor="{StaticResource PrimaryColor}" HorizontalOptions="Start" 
                             VerticalOptions="Center" Margin="0"/>
 
-            <!--#region Accordion-->
-            <CollectionView Grid.Row="2" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-                        SelectionMode="None" ItemsSource="{Binding DeliveryInfos}">
-                <CollectionView.EmptyView>
-                    <Label FontAttributes="Bold" FontSize="20"
-                           HorizontalTextAlignment="Center" Text="No Destination"
-                           TextColor="{StaticResource ContentTextColor}" VerticalTextAlignment="Center"/>
-                </CollectionView.EmptyView>
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="15"/>
-                </CollectionView.ItemsLayout>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <pv:PancakeView BackgroundColor="White" VerticalOptions="StartAndExpand" 
-                                    HorizontalOptions="FillAndExpand">
-                            <StackLayout Spacing="5">
-                                <!--#region Delivery-->
-                                <xct:Expander ExpandAnimationEasing="{x:Static Easing.CubicIn}"
-                                              ExpandAnimationLength="500"
-                                              CollapseAnimationEasing="{x:Static Easing.CubicOut}"
-                                              CollapseAnimationLength="500">
-                                    <xct:Expander.Header>
-                                        <Grid ColumnDefinitions="*, 50" ColumnSpacing="5" VerticalOptions="Center" Margin="0,0,0,10">
-                                            <Frame Grid.Column="0" Style="{DynamicResource FrameStyle}" 
+                <!--#region Accordion-->
+                <ScrollView Grid.Row="2" BackgroundColor="White" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <pv:PancakeView BackgroundColor="White" VerticalOptions="StartAndExpand" 
+                                HorizontalOptions="FillAndExpand">
+                        <StackLayout Spacing="10">
+                            <!--#region Delivery-->
+                            <Grid ColumnDefinitions="*, 50" ColumnSpacing="5" VerticalOptions="Center" Margin="0,0,0,0">
+                                <Frame Grid.Column="0" Style="{DynamicResource FrameStyle}" 
                                                     BackgroundColor="{StaticResource PrimaryColor}">
-                                                <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Pickup Address"
+                                    <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Pickup Address" PlaceholderColor="#6FFFFFFF"
                                                              FontSize="{StaticResource LargeFontSize}" FontAttributes="Bold"
-                                                             Text="{Binding PicAddress}" TextColor="#FFF" />
-                                            </Frame>
-                                            <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}" BackgroundColor="{StaticResource PrimaryColor}">
-                                                <Path Style="{StaticResource PathStyle}" Data="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" HeightRequest="18" WidthRequest="18"
+                                                             Text="{Binding AddressDetail}" TextColor="#FFF" />
+                                </Frame>
+                                <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}" BackgroundColor="{StaticResource PrimaryColor}"
+                                          >
+                                    <Path Style="{StaticResource PathStyle}" Data="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" HeightRequest="18" WidthRequest="18"
                                                   Fill="#FFF" HorizontalOptions="Center" VerticalOptions="Center">
-                                                    <Path.Triggers>
-                                                        <DataTrigger TargetType="Path" Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}" Value="True">
-                                                            <Setter Property="Data" Value="M6.582 12.141a.695.695 0 0 1-.978 0a.68.68 0 0 1 0-.969l3.908-3.83a.697.697 0 0 1 .979 0l3.908 3.83a.68.68 0 0 1 0 .969a.697.697 0 0 1-.979 0L10 9l-3.418 3.141z" />
-                                                        </DataTrigger>
-                                                        <DataTrigger TargetType="Path" Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}" Value="False">
-                                                            <Setter Property="Data" Value="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" />
-                                                        </DataTrigger>
-                                                    </Path.Triggers>
+                                        <Path.Triggers>
+                                            <DataTrigger TargetType="Path" Binding="{Binding IsExpandedDelivery}" Value="True">
+                                                <Setter Property="Data" Value="M6.582 12.141a.695.695 0 0 1-.978 0a.68.68 0 0 1 0-.969l3.908-3.83a.697.697 0 0 1 .979 0l3.908 3.83a.68.68 0 0 1 0 .969a.697.697 0 0 1-.979 0L10 9l-3.418 3.141z" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Path" Binding="{Binding IsExpandedDelivery}" Value="False">
+                                                <Setter Property="Data" Value="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" />
+                                            </DataTrigger>
+                                        </Path.Triggers>
+                                    </Path>
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="ExpandedDelivery_Tapped"/>
+                                    </Frame.GestureRecognizers>
+                                </Frame>
+                            </Grid>
+                            <StackLayout Spacing="10" IsVisible="{Binding IsExpandedDelivery}">
+                                <Frame Margin="0" Padding="10" CornerRadius="5" BorderColor="{StaticResource CalendarPrimaryColor}">
+                                    <StackLayout Spacing="10">
+                                        <!--#region Picup-->
+                                        <Grid ColumnDefinitions="*, 50" ColumnSpacing="5">
+                                            <Frame Style="{DynamicResource FrameStyle}" >
+                                                <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Contact Name"
+                                                         Text="{Binding Name}"/>
+                                            </Frame>
+                                            <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}" >
+                                                <Path Style="{StaticResource PathStyle}" Data="M21 2H6a2 2 0 0 0-2 2v3H2v2h2v2H2v2h2v2H2v2h2v3a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zm-8 2.999c1.648 0 3 1.351 3 3A3.012 3.012 0 0 1 13 11c-1.647 0-3-1.353-3-3.001c0-1.649 1.353-3 3-3zM19 18H7v-.75c0-2.219 2.705-4.5 6-4.5s6 2.281 6 4.5V18z" HeightRequest="18" WidthRequest="18"
+                                                          Fill="{StaticResource PrimaryColor}" HorizontalOptions="Center" VerticalOptions="Center">
                                                 </Path>
+                                                <Frame.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="ButtonPicContact_Tapped"/>
+                                                </Frame.GestureRecognizers>
                                             </Frame>
                                         </Grid>
-                                    </xct:Expander.Header>
-
-                                    <StackLayout Spacing="10">
-                                        <Grid>
-                                            <Frame Margin="0" Padding="10" CornerRadius="5" BorderColor="{StaticResource CalendarPrimaryColor}">
-                                                <StackLayout Spacing="10">
-                                                    <!--#region Picup-->
-                                                    <Grid ColumnDefinitions="*, 50" ColumnSpacing="5">
-                                                        <Frame Style="{DynamicResource FrameStyle}" >
-                                                            <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Contact Name"
-                                                         Text="{Binding PicContactName}"/>
-                                                        </Frame>
-                                                        <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}" >
-                                                            <Path Style="{StaticResource PathStyle}" Data="M21 2H6a2 2 0 0 0-2 2v3H2v2h2v2H2v2h2v2H2v2h2v3a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zm-8 2.999c1.648 0 3 1.351 3 3A3.012 3.012 0 0 1 13 11c-1.647 0-3-1.353-3-3.001c0-1.649 1.353-3 3-3zM19 18H7v-.75c0-2.219 2.705-4.5 6-4.5s6 2.281 6 4.5V18z" HeightRequest="18" WidthRequest="18"
-                                                          Fill="{StaticResource PrimaryColor}" HorizontalOptions="Center" VerticalOptions="Center">
-                                                            </Path>
-                                                            <Frame.GestureRecognizers>
-                                                                <TapGestureRecognizer Tapped="ButtonPicContact_Tapped"/>
-                                                            </Frame.GestureRecognizers>
-                                                        </Frame>
-                                                    </Grid>
-                                                    <Frame Style="{DynamicResource FrameStyle}" >
-                                                        <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Company Name"
-                                                         Text="{Binding PicCompanyName}"/>
-                                                    </Frame>
-                                                    <Frame Style="{DynamicResource FrameStyle}" >
-                                                        <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Phone"
-                                                         Text="{Binding PicPhone}"/>
-                                                    </Frame>
-                                                    <Frame Style="{DynamicResource FrameStyle}" >
-                                                        <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Email Address"
-                                                         Text="{Binding PicEmailAddress}"/>
-                                                    </Frame>
-                                                    <Frame Style="{DynamicResource FrameStyle}" HeightRequest="150">
-                                                        <Editor HeightRequest="150" HorizontalOptions="FillAndExpand"
+                                        <Frame Style="{DynamicResource FrameStyle}" >
+                                            <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Company Name"
+                                                         Text="{Binding CompanyName}"/>
+                                        </Frame>
+                                        <Frame Style="{DynamicResource FrameStyle}" >
+                                            <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Phone"
+                                                         Text="{Binding Phone}"/>
+                                        </Frame>
+                                        <Frame Style="{DynamicResource FrameStyle}" >
+                                            <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Email Address"
+                                                         Text="{Binding Email}"/>
+                                        </Frame>
+                                        <Frame Style="{DynamicResource FrameStyle}" HeightRequest="150">
+                                            <Editor HeightRequest="150" HorizontalOptions="FillAndExpand"
                                                         VerticalOptions="FillAndExpand" TextColor="#000"
                                                         FontAttributes="None"  FontSize="{StaticResource MediumFontSize}"
-                                                        Text="{Binding PicNotes}" Placeholder="Notes"/>
-                                                    </Frame>
-                                                    <Grid ColumnDefinitions="*, 0.6*" ColumnSpacing="5" VerticalOptions="Center" Margin="0">
-                                                        <Frame Grid.Column="0" Style="{DynamicResource FrameStyle}">
-                                                            <Grid ColumnDefinitions="120,*" ColumnSpacing="5">
-                                                                <Label Grid.Column="0" HorizontalOptions="StartAndExpand"
-                                                               VerticalOptions="FillAndExpand" HorizontalTextAlignment="Start"
-                                                               VerticalTextAlignment="Center" TextColor="#000"
-                                                               FontAttributes="None"  FontSize="{StaticResource LargeFontSize}"
-                                                               Text="Delivery time"/>
-                                                                <TimePicker Grid.Column="1" HorizontalOptions="StartAndExpand" VerticalOptions="Center"
-                                                                    FontAttributes="None" TextColor="#000"
-                                                                    FontSize="{StaticResource LargeFontSize}" Time="{Binding StartTime}" 
-                                                                Format="HH:mm" BackgroundColor="{StaticResource FrameBackgroundColor}"/>
-                                                            </Grid>
-                                                        </Frame>
-                                                        <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}">
-                                                            <DatePicker HorizontalOptions="CenterAndExpand" VerticalOptions="Center"
-                                                            FontAttributes="None" TextColor="#000"
-                                                            FontSize="{StaticResource LargeFontSize}" Date="{Binding StartTime}" 
-                                                            BackgroundColor="{StaticResource FrameBackgroundColor}"/>
-                                                        </Frame>
-                                                    </Grid>
-                                                    <!--#endregion-->
-                                                </StackLayout>
-                                            </Frame>
-                                        </Grid>
-                                        <!--#region Destination-->
-                                        <StackLayout BindableLayout.ItemsSource="{Binding Destinations}"
-                                                       HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
-                                            <BindableLayout.ItemTemplate>
-                                                <DataTemplate>
-                                                    <xct:Expander >
-                                                        <xct:Expander.Header>
-                                                            <Grid ColumnDefinitions="*, 50" ColumnSpacing="5" VerticalOptions="Center" Margin="0,0,0,10">
-                                                                <Frame Grid.Column="0" Style="{DynamicResource FrameStyle}" 
+                                                        Text="{Binding Notes}" Placeholder="Notes"/>
+                                        </Frame>
+                                        <Frame Style="{DynamicResource FrameStyle}">
+                                            <Grid ColumnDefinitions="120,*" ColumnSpacing="5">
+                                                <Label Grid.Column="0" HorizontalOptions="StartAndExpand"
+                                                                                       VerticalOptions="FillAndExpand" HorizontalTextAlignment="Start"
+                                                                                       VerticalTextAlignment="Center" TextColor="#000"
+                                                                                       FontAttributes="None"  FontSize="{StaticResource LargeFontSize}"
+                                                                                       Text="Delivery time"/>
+                                                <control:MyDateTimePicker Grid.Column="1" HorizontalOptions="CenterAndExpand" VerticalOptions="Center"
+                                                                                DateTime="{Binding PlanningTime}" StringFormat="dd/MM/yyyy HH:mm" xct:IconTintColorEffect.TintColor="Red"
+                                                                                BackgroundColor="{StaticResource FrameBackgroundColor}"/>
+                                            </Grid>
+                                        </Frame>
+                                        <!--#endregion-->
+                                    </StackLayout>
+                                </Frame>
+
+                                <!--#region Destination-->
+                                <StackLayout BindableLayout.ItemsSource="{Binding Destinations}"
+                                         HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackLayout Spacing="10">
+                                                <Grid ColumnDefinitions="*, 50" ColumnSpacing="5" VerticalOptions="Center" Margin="0,0,0,0">
+                                                    <Frame Grid.Column="0" Style="{DynamicResource FrameStyle}" 
                                                                         BackgroundColor="{StaticResource CalendarPrimaryColor}">
-                                                                    <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Destination Address"
+                                                        <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Destination Address"
                                                                                      FontSize="{StaticResource LargeFontSize}" FontAttributes="Bold"
-                                                                                     Text="{Binding DesAddress}"/>
-                                                                </Frame>
-                                                                <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}" BackgroundColor="{StaticResource CalendarPrimaryColor}">
-                                                                    <Path Style="{StaticResource PathStyle}" Data="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" HeightRequest="18" WidthRequest="18"
-                                                                            Fill="{StaticResource PrimaryColor}" HorizontalOptions="Center" VerticalOptions="Center">
-                                                                        <Path.Triggers>
-                                                                            <DataTrigger TargetType="Path" Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}" Value="True">
-                                                                                <Setter Property="Data" Value="M6.582 12.141a.695.695 0 0 1-.978 0a.68.68 0 0 1 0-.969l3.908-3.83a.697.697 0 0 1 .979 0l3.908 3.83a.68.68 0 0 1 0 .969a.697.697 0 0 1-.979 0L10 9l-3.418 3.141z" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger TargetType="Path" Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}" Value="False">
-                                                                                <Setter Property="Data" Value="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" />
-                                                                            </DataTrigger>
-                                                                        </Path.Triggers>
-                                                                    </Path>
-                                                                </Frame>
-                                                            </Grid>
-                                                        </xct:Expander.Header>
-                                                        <Grid>
-                                                            <Frame Margin="0" Padding="10" CornerRadius="5" BorderColor="{StaticResource CalendarPrimaryColor}">
-                                                                <StackLayout Spacing="10">
-                                                                    <Grid ColumnDefinitions="*, 50" ColumnSpacing="5">
-                                                                        <Frame Style="{DynamicResource FrameStyle}" >
-                                                                            <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Contact Name"
-                                                                                    Text="{Binding DesContactName}"/>
-                                                                        </Frame>
-                                                                        <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}">
-                                                                            <Path Style="{StaticResource PathStyle}" Data="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" HeightRequest="18" WidthRequest="18"
-                                                                                Fill="{StaticResource PrimaryColor}" HorizontalOptions="Center" VerticalOptions="Center">
-                                                                                <Path.Triggers>
-                                                                                    <DataTrigger TargetType="Path" Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}" Value="True">
-                                                                                        <Setter Property="Data" Value="M21 2H6a2 2 0 0 0-2 2v3H2v2h2v2H2v2h2v2H2v2h2v3a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zm-8 2.999c1.648 0 3 1.351 3 3A3.012 3.012 0 0 1 13 11c-1.647 0-3-1.353-3-3.001c0-1.649 1.353-3 3-3zM19 18H7v-.75c0-2.219 2.705-4.5 6-4.5s6 2.281 6 4.5V18z" />
-                                                                                    </DataTrigger>
-                                                                                    <DataTrigger TargetType="Path" Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}" Value="False">
-                                                                                        <Setter Property="Data" Value="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" />
-                                                                                    </DataTrigger>
-                                                                                </Path.Triggers>
-                                                                            </Path>
-                                                                            <Frame.GestureRecognizers>
-                                                                                <TapGestureRecognizer Tapped="ButtonDesContact_Tapped"/>
-                                                                            </Frame.GestureRecognizers>
-                                                                        </Frame>
-                                                                    </Grid>
-                                                                    <Frame Style="{DynamicResource FrameStyle}" >
-                                                                        <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Company Name"
-                                                                                    Text="{Binding DesCompanyName}"/>
-                                                                    </Frame>
-                                                                    <Frame Style="{DynamicResource FrameStyle}" >
-                                                                        <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Phone"
-                                                                                    Text="{Binding DesPhone}"/>
-                                                                    </Frame>
-                                                                    <Frame Style="{DynamicResource FrameStyle}" >
-                                                                        <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Email Address"
-                                                                                Text="{Binding DesEmailAddress}"/>
-                                                                    </Frame>
-                                                                    <Frame Style="{DynamicResource FrameStyle}" HeightRequest="150" >
-                                                                        <Editor HeightRequest="150" HorizontalOptions="FillAndExpand"
+                                                                                     Text="{Binding AddressDetail}"/>
+                                                    </Frame>
+                                                    <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}" BackgroundColor="{StaticResource CalendarPrimaryColor}">
+                                                        <Path Style="{StaticResource PathStyle}" Data="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" HeightRequest="18" WidthRequest="18"
+                                                                 Fill="{StaticResource PrimaryColor}" HorizontalOptions="Center" VerticalOptions="Center">
+                                                            <Path.Triggers>
+                                                                <DataTrigger TargetType="Path" Binding="{Binding IsExpandedDestination}" Value="True">
+                                                                    <Setter Property="Data" Value="M6.582 12.141a.695.695 0 0 1-.978 0a.68.68 0 0 1 0-.969l3.908-3.83a.697.697 0 0 1 .979 0l3.908 3.83a.68.68 0 0 1 0 .969a.697.697 0 0 1-.979 0L10 9l-3.418 3.141z" />
+                                                                </DataTrigger>
+                                                                <DataTrigger TargetType="Path" Binding="{Binding IsExpandedDestination}" Value="False">
+                                                                    <Setter Property="Data" Value="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" />
+                                                                </DataTrigger>
+                                                            </Path.Triggers>
+                                                        </Path>
+                                                        <Frame.GestureRecognizers>
+                                                            <TapGestureRecognizer Tapped="ExpandedDestination_Tapped"/>
+                                                        </Frame.GestureRecognizers>
+                                                    </Frame>
+                                                </Grid>
+                                                <Frame Margin="0" Padding="10" CornerRadius="5" BorderColor="{StaticResource CalendarPrimaryColor}" 
+                                                   IsVisible="{Binding IsExpandedDestination}">
+                                                    <StackLayout Spacing="10">
+                                                        <Grid ColumnDefinitions="*, 50" ColumnSpacing="5">
+                                                            <Frame Style="{DynamicResource FrameStyle}" >
+                                                                <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Contact Name"
+                                                                                    Text="{Binding Name}"/>
+                                                            </Frame>
+                                                            <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}">
+                                                                <Path Style="{StaticResource PathStyle}" Data="M21 2H6a2 2 0 0 0-2 2v3H2v2h2v2H2v2h2v2H2v2h2v3a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1zm-8 2.999c1.648 0 3 1.351 3 3A3.012 3.012 0 0 1 13 11c-1.647 0-3-1.353-3-3.001c0-1.649 1.353-3 3-3zM19 18H7v-.75c0-2.219 2.705-4.5 6-4.5s6 2.281 6 4.5V18z" HeightRequest="18" WidthRequest="18"
+                                                                  Fill="{StaticResource PrimaryColor}" HorizontalOptions="Center" VerticalOptions="Center">
+                                                                </Path>
+                                                                <Frame.GestureRecognizers>
+                                                                    <TapGestureRecognizer Tapped="ButtonDesContact_Tapped"/>
+                                                                </Frame.GestureRecognizers>
+                                                            </Frame>
+                                                        </Grid>
+                                                        <Frame Style="{DynamicResource FrameStyle}" >
+                                                            <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Company Name"
+                                                                                    Text="{Binding CompanyName}"/>
+                                                        </Frame>
+                                                        <Frame Style="{DynamicResource FrameStyle}" >
+                                                            <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Phone"
+                                                                                    Text="{Binding Phone}"/>
+                                                        </Frame>
+                                                        <Frame Style="{DynamicResource FrameStyle}" >
+                                                            <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Email Address"
+                                                                                Text="{Binding Email}"/>
+                                                        </Frame>
+                                                        <Frame Style="{DynamicResource FrameStyle}" HeightRequest="150" >
+                                                            <Editor HeightRequest="150" HorizontalOptions="FillAndExpand"
                                                                         VerticalOptions="FillAndExpand" TextColor="#000"
                                                                         FontAttributes="None"  FontSize="{StaticResource MediumFontSize}"
-                                                                        Text="{Binding DesNotes}"/>
-                                                                    </Frame>
-                                                                    <Grid ColumnDefinitions="*, 0.6*" ColumnSpacing="5" VerticalOptions="Center" Margin="0">
-                                                                        <Frame Grid.Column="0" Style="{DynamicResource FrameStyle}">
-                                                                            <Grid ColumnDefinitions="120,*" ColumnSpacing="5">
-                                                                                <Label Grid.Column="0" HorizontalOptions="StartAndExpand"
+                                                                        Text="{Binding Notes}"/>
+                                                        </Frame>
+                                                        <Frame Style="{DynamicResource FrameStyle}">
+                                                            <Grid ColumnDefinitions="120,*" ColumnSpacing="5">
+                                                                <Label Grid.Column="0" HorizontalOptions="StartAndExpand"
                                                                                        VerticalOptions="FillAndExpand" HorizontalTextAlignment="Start"
                                                                                        VerticalTextAlignment="Center" TextColor="#000"
                                                                                        FontAttributes="None"  FontSize="{StaticResource LargeFontSize}"
                                                                                        Text="Destination time"/>
-                                                                                <TimePicker Grid.Column="1" HorizontalOptions="StartAndExpand" VerticalOptions="Center"
-                                                                                    FontAttributes="None" TextColor="#000"
-                                                                                    FontSize="{StaticResource LargeFontSize}" Time="{Binding FinishTime}" Format="HH:mm" 
-                                                                                    BackgroundColor="{StaticResource FrameBackgroundColor}"/>
-                                                                            </Grid>
-                                                                        </Frame>
-                                                                        <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}">
-                                                                            <DatePicker HorizontalOptions="CenterAndExpand" VerticalOptions="Center"
-                                                                                FontAttributes="None" TextColor="#000"
-                                                                                FontSize="{StaticResource LargeFontSize}" Date="{Binding FinishTime}" 
+                                                                <control:MyDateTimePicker Grid.Column="1" HorizontalOptions="CenterAndExpand" VerticalOptions="Center"
+                                                                                DateTime="{Binding PlanningTime}" StringFormat="dd/MM/yyyy HH:mm" xct:IconTintColorEffect.TintColor="Red"
                                                                                 BackgroundColor="{StaticResource FrameBackgroundColor}"/>
-                                                                        </Frame>
-                                                                    </Grid>
-                                                                </StackLayout>
-                                                            </Frame>
-                                                        </Grid>
-                                                    </xct:Expander>
-                                                </DataTemplate>
-                                            </BindableLayout.ItemTemplate>
-                                        </StackLayout>
-                                        <!--#endregion-->
-                                        
-                                        <!--#region Storage-->
-                                        <Label HorizontalOptions="StartAndExpand"
+                                                            </Grid>
+                                                        </Frame>
+                                                    </StackLayout>
+                                                </Frame>
+                                            </StackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                                <!--#endregion-->
+
+                                <!--#region Storage-->
+                                <Label HorizontalOptions="StartAndExpand"
                                                VerticalOptions="Center" HorizontalTextAlignment="Center"
                                                VerticalTextAlignment="Center" TextColor="{StaticResource PrimaryColor}"
                                                FontAttributes="Italic"  FontSize="{StaticResource LargeFontSize}" Text="List Storage"/>
-                                        
-                                        <StackLayout BindableLayout.ItemsSource="{Binding ListStorage}"
-                                                         HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
-                                            <BindableLayout.ItemTemplate>
-                                                <DataTemplate>
-                                                    <xct:Expander ExpandAnimationEasing="{x:Static Easing.CubicIn}"
-                                                                  ExpandAnimationLength="500"
-                                                                  CollapseAnimationEasing="{x:Static Easing.CubicOut}"
-                                                                  CollapseAnimationLength="500">
-                                                        <xct:Expander.Header>
-                                                            <Grid ColumnDefinitions="50,0.7*,*,50" ColumnSpacing="5" Margin="0,0,0,5">
-                                                                <Frame Grid.Column="0" Style="{DynamicResource FrameStyle}" 
+
+                                <StackLayout BindableLayout.ItemsSource="{Binding Cages}"
+                                             HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackLayout Spacing="10">
+                                                <Grid ColumnDefinitions="50,0.7*,*,50" ColumnSpacing="5" Margin="0,0,0,0">
+                                                    <Frame Grid.Column="0" Style="{DynamicResource FrameStyle}" 
                                                                                xct:TouchEffect.PressedScale="1.01" xct:TouchEffect.NativeAnimation="True"
                                                                                xct:TouchEffect.Command="{Binding StoragePressedCommand, Source={RelativeSource AncestorType={x:Type ViewModels:AccordionViewModel}}}"
                                                                                xct:TouchEffect.CommandParameter="{Binding .}">
-                                                                    <Path Style="{StaticResource PathStyle}" Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8z" HeightRequest="18" WidthRequest="18"
+                                                        <Path Style="{StaticResource PathStyle}" Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8z" HeightRequest="18" WidthRequest="18"
                                                                                     Fill="{StaticResource PrimaryColor}" HorizontalOptions="Center" VerticalOptions="Center">
-                                                                        <Path.Triggers>
-                                                                            <DataTrigger TargetType="Path" Binding="{Binding IsSelected}" Value="True">
-                                                                                <Setter Property="Data" Value="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1zm4.768 9.14a1 1 0 1 0-1.536-1.28l-4.3 5.159l-2.225-2.226a1 1 0 0 0-1.414 1.414l3 3a1 1 0 0 0 1.475-.067l5-6z" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger TargetType="Path" Binding="{Binding IsSelected}" Value="False">
-                                                                                <Setter Property="Data" Value="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8z" />
-                                                                            </DataTrigger>
-                                                                        </Path.Triggers>
-                                                                    </Path>
-                                                                </Frame>
-                                                                <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}" BackgroundColor="{StaticResource PageBackgroundColor}">
-                                                                    <Picker HorizontalOptions="FillAndExpand"
-                                                                                    VerticalOptions="Center" HorizontalTextAlignment="Center"
-                                                                                    VerticalTextAlignment="Center" TextColor="#000" BackgroundColor="{StaticResource FrameBackgroundColor}"
-                                                                                    FontAttributes="Bold" SelectedIndex="0" FontSize="{StaticResource LargeFontSize}">
-                                                                        <Picker.Items>
-                                                                            <x:String>Cage</x:String>
-                                                                            <x:String>Pallet</x:String>
-                                                                        </Picker.Items>
-                                                                    </Picker>
-                                                                </Frame>
-                                                                <Frame Grid.Column="2" Style="{DynamicResource FrameStyle}" BackgroundColor="{StaticResource PageBackgroundColor}">
-                                                                    <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Amount"
-                                                                                     Text="{Binding Amount}" FontAttributes="Bold" Keyboard="Numeric"
+                                                            <Path.Triggers>
+                                                                <DataTrigger TargetType="Path" Binding="{Binding IsSelected}" Value="True">
+                                                                    <Setter Property="Data" Value="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1zm4.768 9.14a1 1 0 1 0-1.536-1.28l-4.3 5.159l-2.225-2.226a1 1 0 0 0-1.414 1.414l3 3a1 1 0 0 0 1.475-.067l5-6z" />
+                                                                </DataTrigger>
+                                                                <DataTrigger TargetType="Path" Binding="{Binding IsSelected}" Value="False">
+                                                                    <Setter Property="Data" Value="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8z" />
+                                                                </DataTrigger>
+                                                            </Path.Triggers>
+                                                        </Path>
+                                                    </Frame>
+                                                    <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}" BackgroundColor="{StaticResource PageBackgroundColor}">
+                                                        <Label Style="{DynamicResource LableStyle}"
+                                                                         Text="{Binding StorageInfo}"/>
+                                                    </Frame>
+                                                    <Frame Grid.Column="2" Style="{DynamicResource FrameStyle}" BackgroundColor="{StaticResource PageBackgroundColor}">
+                                                        <control:MyEntry Style="{DynamicResource EntryStyle}" Placeholder="Values"
+                                                                                     Text="{Binding CageName}" FontAttributes="Bold"
                                                                                      FontSize="{StaticResource LargeFontSize}" HorizontalTextAlignment="Center"/>
-                                                                </Frame>
-                                                                <Frame Grid.Column="3" Style="{DynamicResource FrameStyle}" >
-                                                                    <Path Style="{StaticResource PathStyle}" Data="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" HeightRequest="18" WidthRequest="18"
+                                                    </Frame>
+                                                    <Frame Grid.Column="3" Style="{DynamicResource FrameStyle}" 
+                                                           xct:TouchEffect.PressedScale="1.01" xct:TouchEffect.NativeAnimation="True"   
+                                                           xct:TouchEffect.Command="{Binding StorageExpandPressedCommand, Source={RelativeSource AncestorType={x:Type ViewModels:AccordionViewModel}}}"
+                                                           xct:TouchEffect.CommandParameter="{Binding .}">
+                                                        <Path Style="{StaticResource PathStyle}" Data="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" HeightRequest="18" WidthRequest="18"
                                                                               Fill="{StaticResource PrimaryColor}" HorizontalOptions="Center" VerticalOptions="Center">
-                                                                        <Path.Triggers>
-                                                                            <DataTrigger TargetType="Path" Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}" Value="True">
-                                                                                <Setter Property="Data" Value="M6.582 12.141a.695.695 0 0 1-.978 0a.68.68 0 0 1 0-.969l3.908-3.83a.697.697 0 0 1 .979 0l3.908 3.83a.68.68 0 0 1 0 .969a.697.697 0 0 1-.979 0L10 9l-3.418 3.141z" />
-                                                                            </DataTrigger>
-                                                                            <DataTrigger TargetType="Path" Binding="{Binding Source={RelativeSource AncestorType={x:Type xct:Expander}}, Path=IsExpanded}" Value="False">
-                                                                                <Setter Property="Data" Value="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" />
-                                                                            </DataTrigger>
-                                                                        </Path.Triggers>
-                                                                    </Path>
-                                                                </Frame>
-                                                            </Grid>
-                                                        </xct:Expander.Header>
-                                                        <!--#region Stotage detail-->
-                                                        <StackLayout BindableLayout.ItemsSource="{Binding ListStorageDetail}" 
-                                                                         HorizontalOptions="StartAndExpand" VerticalOptions="Center" Margin="0">
-                                                            <BindableLayout.ItemTemplate>
-                                                                <DataTemplate>
-                                                                    <Grid ColumnDefinitions="50,*" ColumnSpacing="5">
-                                                                        <Frame Grid.Column="0" Style="{DynamicResource FrameStyle}" 
+                                                            <Path.Triggers>
+                                                                <DataTrigger TargetType="Path" Binding="{Binding IsExpandedListItem}" Value="True">
+                                                                    <Setter Property="Data" Value="M6.582 12.141a.695.695 0 0 1-.978 0a.68.68 0 0 1 0-.969l3.908-3.83a.697.697 0 0 1 .979 0l3.908 3.83a.68.68 0 0 1 0 .969a.697.697 0 0 1-.979 0L10 9l-3.418 3.141z" />
+                                                                </DataTrigger>
+                                                                <DataTrigger TargetType="Path" Binding="{Binding IsExpandedListItem}" Value="False">
+                                                                    <Setter Property="Data" Value="M13.418 7.859a.695.695 0 0 1 .978 0a.68.68 0 0 1 0 .969l-3.908 3.83a.697.697 0 0 1-.979 0l-3.908-3.83a.68.68 0 0 1 0-.969a.695.695 0 0 1 .978 0L10 11l3.418-3.141z" />
+                                                                </DataTrigger>
+                                                            </Path.Triggers>
+                                                        </Path>
+                                                    </Frame>
+                                                </Grid>
+
+                                                <!--#region Item detail-->
+                                                <ListView ItemsSource="{Binding GroupList}" IsVisible="{Binding IsExpandedListItem}"  
+                                                          HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand" Margin="0"
+                                                          IsGroupingEnabled="true" GroupShortNameBinding="{Binding JobNo}" GroupDisplayBinding="{Binding JobNo}" HeightRequest="300">
+
+                                                    <ListView.GroupHeaderTemplate>
+                                                        <DataTemplate>
+                                                            <ViewCell>
+                                                                <Grid Margin="2">
+                                                                    <Label FontSize="15" HorizontalTextAlignment="Start" VerticalTextAlignment="Center" VerticalOptions="Center" HorizontalOptions="Start" FontAttributes="Italic">
+                                                                        <Label.FormattedText>
+                                                                            <FormattedString>
+                                                                                <FormattedString.Spans>
+                                                                                    <Span Text="{Binding JobNo}" TextColor="{StaticResource PrimaryColor}" FontSize="15" FontAttributes="Italic"/>
+                                                                                    <Span Text=" [" TextColor="{StaticResource PrimaryColor}" FontSize="15" FontAttributes="Italic"/>
+                                                                                    <Span Text="{Binding CountItem}" TextColor="{StaticResource PrimaryColor}" FontSize="15" FontAttributes="Italic"/>
+                                                                                    <Span Text="]" TextColor="{StaticResource PrimaryColor}" FontSize="15" FontAttributes="Italic"/>
+                                                                                </FormattedString.Spans>
+                                                                            </FormattedString>
+                                                                        </Label.FormattedText>
+                                                                    </Label>
+                                                                </Grid>
+                                                            </ViewCell>
+                                                        </DataTemplate>
+                                                    </ListView.GroupHeaderTemplate>
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <ViewCell>
+                                                                <Grid ColumnDefinitions="50,*" ColumnSpacing="2" Margin="2">
+                                                                    <Frame Grid.Column="0" Style="{DynamicResource FrameStyle}" 
                                                                                        xct:TouchEffect.PressedScale="1.01" xct:TouchEffect.NativeAnimation="True"
                                                                                        xct:TouchEffect.Command="{Binding StorageDetailPressedCommand, Source={RelativeSource AncestorType={x:Type ViewModels:AccordionViewModel}}}"
                                                                                        xct:TouchEffect.CommandParameter="{Binding .}">
-                                                                            <!--<CheckBox IsChecked="{Binding IsSelected}" Color="{StaticResource PrimaryColor}"/>-->
-                                                                            <Path Style="{StaticResource PathStyle}" HeightRequest="18" WidthRequest="18" Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8z"
+                                                                        <!--<CheckBox IsChecked="{Binding IsSelected}" Color="{StaticResource PrimaryColor}"/>-->
+                                                                        <Path Style="{StaticResource PathStyle}" HeightRequest="18" WidthRequest="18" Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8z"
                                                                                           Fill="{StaticResource PrimaryColor}" HorizontalOptions="Center" VerticalOptions="Center">
-                                                                                <Path.Triggers>
-                                                                                    <DataTrigger TargetType="Path" Binding="{Binding IsSelected}" Value="True">
-                                                                                        <Setter Property="Data" Value="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1zm4.768 9.14a1 1 0 1 0-1.536-1.28l-4.3 5.159l-2.225-2.226a1 1 0 0 0-1.414 1.414l3 3a1 1 0 0 0 1.475-.067l5-6z" />
-                                                                                    </DataTrigger>
-                                                                                    <DataTrigger TargetType="Path" Binding="{Binding IsSelected}" Value="False">
-                                                                                        <Setter Property="Data" Value="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8z" />
-                                                                                    </DataTrigger>
-                                                                                </Path.Triggers>
-                                                                            </Path>
-                                                                        </Frame>
-                                                                        <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}" >
-                                                                            <StackLayout Spacing="5" Margin="3" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
-                                                                                <Label Text="{Binding jobno}" TextColor="Black" FontSize="15"/>
-                                                                                <Label Text="{Binding filename}" TextColor="#2F3246" FontSize="12"/>
-                                                                            </StackLayout>
-                                                                        </Frame>
-                                                                    </Grid>
-                                                                </DataTemplate>
-                                                            </BindableLayout.ItemTemplate>
-                                                        </StackLayout>
-                                                        <!--#endregion-->
-                                                    </xct:Expander>
-                                                </DataTemplate>
-                                            </BindableLayout.ItemTemplate>
-                                        </StackLayout>
-                                        <!--#endregion-->
-
-                                        <!--#region Button add storage-->
-                                        <Button CornerRadius="10" HorizontalOptions="Center" VerticalOptions="Center"
-                                                        BackgroundColor="{StaticResource FrameBackgroundColor}" Text="Add Storage" TextColor="{StaticResource PrimaryColor}" 
-                                                        FontSize="{StaticResource SmallFontSize}" FontAttributes="Bold" Margin="0" WidthRequest="200" HeightRequest="50"
-                                                        Clicked="ButtonAddStorage_Clicked"/>
-                                        <!--#endregion-->
-                                    </StackLayout>
-                                </xct:Expander>
+                                                                            <Path.Triggers>
+                                                                                <DataTrigger TargetType="Path" Binding="{Binding IsSelected}" Value="True">
+                                                                                    <Setter Property="Data" Value="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11s11-4.925 11-11S18.075 1 12 1zm4.768 9.14a1 1 0 1 0-1.536-1.28l-4.3 5.159l-2.225-2.226a1 1 0 0 0-1.414 1.414l3 3a1 1 0 0 0 1.475-.067l5-6z" />
+                                                                                </DataTrigger>
+                                                                                <DataTrigger TargetType="Path" Binding="{Binding IsSelected}" Value="False">
+                                                                                    <Setter Property="Data" Value="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8s8 3.58 8 8s-3.58 8-8 8z" />
+                                                                                </DataTrigger>
+                                                                            </Path.Triggers>
+                                                                        </Path>
+                                                                    </Frame>
+                                                                    <Frame Grid.Column="1" Style="{DynamicResource FrameStyle}">
+                                                                        <StackLayout Margin="2" VerticalOptions="Center" Spacing="0" HorizontalOptions="StartAndExpand">
+                                                                            <Label TextColor="Black" FontSize="15">
+                                                                                <Label.FormattedText>
+                                                                                    <FormattedString>
+                                                                                        <FormattedString.Spans>
+                                                                                            <Span Text="{Binding Description}" TextColor="Black" FontSize="15"/>
+                                                                                        </FormattedString.Spans>
+                                                                                    </FormattedString>
+                                                                                </Label.FormattedText>
+                                                                            </Label>
+                                                                            <Label TextColor="#2F3246" FontSize="10" Margin="0,-1,0,0">
+                                                                                <Label.FormattedText>
+                                                                                    <FormattedString>
+                                                                                        <FormattedString.Spans>
+                                                                                            <Span Text="{Binding DepthDim}" TextColor="#000" FontSize="10"/>
+                                                                                            <Span Text=" x " TextColor="Black" FontSize="10"/>
+                                                                                            <Span Text="{Binding WidthDim}" TextColor="Black" FontSize="10"/>
+                                                                                            <Span Text=" x " TextColor="Black" FontSize="10"/>
+                                                                                            <Span Text="{Binding Lengthangle}" TextColor="Black" FontSize="10"/>
+                                                                                        </FormattedString.Spans>
+                                                                                    </FormattedString>
+                                                                                </Label.FormattedText>
+                                                                            </Label>
+                                                                        </StackLayout>
+                                                                    </Frame>
+                                                                </Grid>
+                                                            </ViewCell>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                </ListView>
+                                                <!--#endregion-->
+                                            </StackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
                                 <!--#endregion-->
                             </StackLayout>
-                        </pv:PancakeView>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-            <!--#endregion-->
+                            <!--#endregion-->
+                        </StackLayout>
+                    </pv:PancakeView>
+                </ScrollView>
 
-            <!--#region Footer-->
-            <Grid Grid.Row="3" HeightRequest="50" ColumnSpacing="0" Margin="0" Padding="0"
+                <!--#endregion-->
+
+                <!--#region Footer-->
+                <Grid Grid.Row="3" HeightRequest="50" ColumnSpacing="0" Margin="0" Padding="0"
                   HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
                   ColumnDefinitions="*,*,*">
-                <Button Grid.Column="0" CornerRadius="10" HorizontalOptions="Start" VerticalOptions="Center"
+                    <Button Grid.Column="0" CornerRadius="10" HorizontalOptions="Start" VerticalOptions="Center"
                         BackgroundColor="{StaticResource PrimaryColor}" Text="Save" TextColor="#FFF" 
                         FontSize="{StaticResource SmallFontSize}" FontAttributes="None" Margin="0" WidthRequest="100" HeightRequest="50"
                         Clicked="ButtonSave_Clicked" IsEnabled="{Binding IsEnableButtonSave}">
-                    <Button.Triggers>
-                        <DataTrigger TargetType="Button" Binding="{Binding IsEnableButtonSave}" Value="False">
-                            <Setter Property="BackgroundColor" Value="#5F2060FF"/>
-                        </DataTrigger>
-                        <DataTrigger TargetType="Button" Binding="{Binding IsEnableButtonSave}" Value="True">
-                            <Setter Property="BackgroundColor" Value="#2060FF"/>
-                        </DataTrigger>
-                    </Button.Triggers>
-                </Button>
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsEnableButtonSave}" Value="False">
+                                <Setter Property="BackgroundColor" Value="#5F2060FF"/>
+                            </DataTrigger>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsEnableButtonSave}" Value="True">
+                                <Setter Property="BackgroundColor" Value="#2060FF"/>
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
 
-                <Label Grid.Column="1" HorizontalOptions="Center"
+                    <Label Grid.Column="1" HorizontalOptions="Center"
                        VerticalOptions="Center" HorizontalTextAlignment="Center"
                        VerticalTextAlignment="Center" TextColor="{StaticResource PrimaryColor}" FontSize="{StaticResource SmallFontSize}"
                        Text="Add Destination" FontAttributes="Bold">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ButtonAddDestination_Tapped"/>
-                    </Label.GestureRecognizers>
-                </Label>
-                <Label Grid.Column="2" HorizontalOptions="End"
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="ButtonAddDestination_Tapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label Grid.Column="2" HorizontalOptions="End"
                        VerticalOptions="Center" HorizontalTextAlignment="End"
                        VerticalTextAlignment="Center" TextColor="{StaticResource PrimaryColor}"  FontSize="{StaticResource SmallFontSize}"
                        Text="Delete" FontAttributes="Bold">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="ButtonDelete_Tapped"/>
-                    </Label.GestureRecognizers>
-                </Label>
-            </Grid>
-            <!--#endregion-->
-        </Grid>
-    </Frame>
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="ButtonDelete_Tapped"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+                <!--#endregion-->
 
+
+            </Grid>
+        </Frame>
+
+        <!--#region Watting-->
+        <Grid Style="{StaticResource GridLoadingStyle}" IsVisible="{Binding IsRunningAnimation}">
+            <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="10">
+                <ActivityIndicator IsVisible="{Binding IsRunningAnimation}" IsRunning="{Binding IsRunningAnimation}" HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Label Style="{StaticResource LableWaitingStyle}"/>
+            </StackLayout>
+        </Grid>
+        <!--#endregion Watting-->
+    </Grid>
+    
 </ContentPage>

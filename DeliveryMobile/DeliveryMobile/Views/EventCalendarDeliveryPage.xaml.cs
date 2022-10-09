@@ -1,5 +1,6 @@
 ﻿using DeliveryMobile.Base;
 using DeliveryMobile.Models;
+using DeliveryMobile.ServerManager.PremierDuctsServer.APIModels;
 using DeliveryMobile.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,6 @@ namespace DeliveryMobile.Views
         private EventCalendarDeliveryViewModel ViewModel = null;
         private List<SwipeView> swipeViews { set; get; } = null;
         private Event eventSelect { set; get; } = null;
-        private AccordionPage accordionPage = new AccordionPage(new AccordionViewModel());
         public EventCalendarDeliveryPage()
         {
             InitializeComponent();
@@ -24,6 +24,11 @@ namespace DeliveryMobile.Views
             swipeViews = new List<SwipeView>();
         }
 
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            ViewModel.UpdateData();
+        }
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
@@ -41,7 +46,7 @@ namespace DeliveryMobile.Views
 
         private void ButtonAddAccordion_Clicked(object sender, System.EventArgs e)
         {
-            HandelAdd();
+            HandelAddOrUpdate(new Event(new DeliveryOrder()), false);
         }
 
         private void SwipeView_SwipeStarted(object sender, SwipeStartedEventArgs e)
@@ -69,55 +74,20 @@ namespace DeliveryMobile.Views
             eventSelect = obj.BindingContext as Event;
             if (eventSelect == null)
                 return;
-            HandelEdit(eventSelect);
-        }
-
-        private void AccordionPage_Disappearing(object sender, System.EventArgs e)
-        {
-            if (Global.Instance.IsSave)
-            {
-                if (accordionPage.ViewModel != null)
-                {
-                    if (!String.IsNullOrEmpty(accordionPage.ViewModel.JobNo))
-                        eventSelect.DeliveryInfos = accordionPage.ViewModel.DeliveryInfos;
-                    else
-                    {
-                        ViewModel.Events.Add(new Event()
-                        {
-                            JobNo = "New Item",
-                            DeliveryInfos = accordionPage.ViewModel.DeliveryInfos
-                        });
-                    }
-                }
-
-            }
+            HandelAddOrUpdate(eventSelect, true);
         }
 
         private void SwipePrint_Invoked(object sender, EventArgs e)
         {
 
         }
-        private async void HandelEdit(Event ev)
-        {
-            ViewModel.IsRunningAnimation = true;
-            await Task.Delay(1);
-            var viewModelAccordionPage = new AccordionViewModel()
-            {
-                DeliveryInfos = ev.DeliveryInfos,
-                JobNo = ev.JobNo,
-            };
-            accordionPage = new AccordionPage(viewModelAccordionPage);
-            accordionPage.Disappearing += AccordionPage_Disappearing;
-            await Shell.Current.Navigation.PushModalAsync(accordionPage);
-            ViewModel.IsRunningAnimation = false;
-        }
 
-        private async void HandelAdd()
+        private async void HandelAddOrUpdate(Event ev, bool isUpdate)
         {
             ViewModel.IsRunningAnimation = true;
             await Task.Delay(1);
-            accordionPage = new AccordionPage(new AccordionViewModel());
-            accordionPage.Disappearing += AccordionPage_Disappearing;
+            var accordionPage = new AccordionPage(ev.Config, isUpdate);
+            accordionPage.ViewModel.JobNo = "Delivery";
             await Shell.Current.Navigation.PushModalAsync(accordionPage);
             ViewModel.IsRunningAnimation = false;
         }
@@ -134,10 +104,47 @@ namespace DeliveryMobile.Views
             eventSelect = obj.BindingContext as Event;
             if (eventSelect == null)
                 return;
-            HandelEdit(eventSelect);
+            HandelAddOrUpdate(eventSelect,true);
         }
+
         #endregion
 
+        private void ExpandedDelivery_Tapped(object sender, EventArgs e)
+        {
+            var obj = sender as Grid;
+            var item = obj.BindingContext as Event;
+            if (item == null)
+                return;
+            item.IsExpandedDelivery = !item.IsExpandedDelivery;
+        }
 
+        private void ExpandedDestination_Tapped(object sender, EventArgs e)
+        {
+            var obj = sender as Grid;
+            var item = obj.BindingContext as Event;
+            if (item == null)
+                return;
+            item.IsExpandedDestination = !item.IsExpandedDestination;
+        }
+
+        private void ExpandedItem_Tapped(object sender, EventArgs e)
+        {
+            var obj = sender as Grid;
+            var item = obj.BindingContext as Event;
+            if (item == null)
+                return;
+            item.IsExpandedItem = !item.IsExpandedItem;
+        }
+
+        private void SwipeDelete_Invoked(object sender, EventArgs e)
+        {
+            var obj = sender as SwipeItem;
+            if (obj == null)
+                return;
+            eventSelect = obj.BindingContext as Event;
+            if (eventSelect == null)
+                return;
+            ViewModel.DeleteOrder(eventSelect.Config.Id);
+        }
     }
 }

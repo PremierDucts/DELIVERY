@@ -9,6 +9,13 @@ using System.Text;
 
 namespace DeliveryMobile.WebAPIClient.Utility
 {
+    public enum HttpType
+    {
+        GET = 0,
+        POST,
+        PUT,
+        DELETE
+    }
     public class ResponseData
     {
         public int Code { get; set; }
@@ -37,7 +44,7 @@ namespace DeliveryMobile.WebAPIClient.Utility
     public class CommonFuncs
     {
         public static ResponseData RequestApi<T>(ServerConnectInfo svrInfo,
-                String apiCommand, int timeOut, Dictionary<String, String> listParams = null, Object postObj = null)
+            String apiCommand, int timeOut, HttpType httpType, Dictionary<String, String> listParams = null, Object postObj = null)
         {
             var resData = new ResponseData();
             try
@@ -62,11 +69,23 @@ namespace DeliveryMobile.WebAPIClient.Utility
                     }
                     listParams.Remove("jobNo");
                 }
-
-                if (postObj == null)
-                    response = HttpClientUti.SendGetRequest(requestUrl, listParams, timeOut);
-                else
-                    response = HttpClientUti.SendPostRequest(requestUrl, postObj, listParams, timeOut);
+                switch (httpType)
+                {
+                    case HttpType.GET:
+                        response = HttpClientUti.SendGetRequest(requestUrl, listParams, timeOut);
+                        break;
+                    case HttpType.POST:
+                        response = HttpClientUti.SendPostRequest(requestUrl, postObj, listParams, timeOut);
+                        break;
+                    case HttpType.PUT:
+                        response = HttpClientUti.SendPutRequest(requestUrl, postObj, listParams, timeOut);
+                        break;
+                    case HttpType.DELETE:
+                        response = HttpClientUti.SendDeleteRequest(requestUrl, listParams, timeOut);
+                        break;
+                    default:
+                        break;
+                }
 
                 if (resData != null)
                 {
@@ -94,6 +113,10 @@ namespace DeliveryMobile.WebAPIClient.Utility
                     return true;
                 else if (resData.Data.GetType() == typeof(JArray))
                     resData.Data = ((JArray)resData.Data).ToObject<T>();
+                else if (resData.Data.GetType() == typeof(JContainer))
+                    resData.Data = ((JObject)resData.Data).ToObject<T>();
+                else if (resData.Data.GetType() == typeof(JObject))
+                    resData.Data = ((JObject)resData.Data).ToObject<T>();
                 else if (resData.Data.GetType() == typeof(Object))
                     resData.Data = ((JObject)resData.Data).ToObject<T>();
                 return true;

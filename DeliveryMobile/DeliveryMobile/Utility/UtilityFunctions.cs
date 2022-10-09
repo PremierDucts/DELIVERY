@@ -30,5 +30,17 @@ namespace DeliveryMobile.Utility
                 return false;
             }
         }
+        
+        public static DateTime ConvertLongToDateTime(long ticks)
+        {
+            try
+            {
+                return new DateTime(ticks);
+            }
+            catch (Exception ex)
+            {
+                return DateTime.MinValue;
+            }
+        }
     }
 }

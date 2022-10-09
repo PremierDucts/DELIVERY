@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DeliveryMobile.CoreUti;
+using DeliveryMobile.ServerManager.PremierDuctsServer.APIModels;
+using DeliveryMobile.Utility;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,82 +9,158 @@ namespace DeliveryMobile.Models
 {
     public class Destination : BaseObservableModel
     {
-        #region Destination
-        private String _desAddress = "";
-        public String DesAddress
+        #region Contructor
+        public Destination(DeliveryPoint cfg)
         {
-            get => _desAddress;
+            if (cfg != null)
+            {
+                Config = ObjectExtension.CloneByJson(cfg);
+                LoadDataFromConfig();
+            }
+              
+        }
+        #endregion
+
+        #region Property
+        public DeliveryPoint Config { get; set; } = new DeliveryPoint();
+
+        public String AddressDetail
+        {
+            get => Config.AddressDetail;
             set
             {
-                _desAddress = value;
-                OnPropertyChanged("DesAddress");
+                Config.AddressDetail = value;
+                OnPropertyChanged("AddressDetail");
             }
         }
 
-        private String _desContactName = "";
-        public String DesContactName
+        public String Name
         {
-            get => _desContactName;
+            get => Config.Name;
             set
             {
-                _desContactName = value;
-                OnPropertyChanged("DesContactName");
+                Config.Name = value;
+                OnPropertyChanged("Name");
             }
         }
 
-        private String _desCompanyName = "";
-        public String DesCompanyName
+        public String CompanyName
         {
-            get => _desCompanyName;
+            get => Config.CompanyName;
             set
             {
-                _desCompanyName = value;
-                OnPropertyChanged("DesCompanyName");
+                Config.CompanyName = value;
+                OnPropertyChanged("CompanyName");
             }
         }
 
-        private String _desPhone = "";
-        public String DesPhone
+        public String Phone
         {
-            get => _desPhone;
+            get => Config.Phone;
             set
             {
-                _desPhone = value;
-                OnPropertyChanged("DesPhone");
+                Config.Phone = value;
+                OnPropertyChanged("Phone");
             }
         }
 
-        private String _desEmailAddress = "";
-        public String DesEmailAddress
+        public String Email
         {
-            get { return _desEmailAddress; }
+            get { return Config.Email; }
             set
             {
-                _desEmailAddress = value;
-                OnPropertyChanged("DesEmailAddress");
+                Config.Email = value;
+                OnPropertyChanged("Email");
             }
         }
 
-        private String _desNotes = "";
-        public String DesNotes
+        public String Notes
         {
-            get { return _desNotes; }
+            get { return Config.Notes; }
             set
             {
-                _desNotes = value;
-                OnPropertyChanged("DesNotes");
+                Config.Notes = value;
+                OnPropertyChanged("Notes");
             }
         }
 
-        private DateTime _timeDestination = DateTime.Today;
-        public DateTime TimeDestination
+        public String City
         {
-            get => _timeDestination;
+            get { return Config.City; }
             set
             {
-                _timeDestination = value;
-                OnPropertyChanged("TimeDestination");
+                Config.City = value;
+                OnPropertyChanged("City");
             }
+        }
+
+        public String Country
+        {
+            get { return Config.Country; }
+            set
+            {
+                Config.Country = value;
+                OnPropertyChanged("Country");
+            }
+        }
+
+        public bool IsDefault
+        {
+            get { return Config.IsDefault; }
+            set
+            {
+                Config.IsDefault = value;
+                OnPropertyChanged("IsDefault");
+            }
+        }
+
+        public String PostalCode
+        {
+            get { return Config.PostalCode; }
+            set
+            {
+                Config.PostalCode = value;
+                OnPropertyChanged("PostalCode");
+            }
+        }
+
+        public String State
+        {
+            get { return Config.State; }
+            set
+            {
+                Config.State = value;
+                OnPropertyChanged("State");
+            }
+        }
+
+        private DateTime _planningTime = DateTime.Now;
+        public DateTime PlanningTime
+        {
+            get => _planningTime;
+            set
+            {
+                _planningTime = value;
+                OnPropertyChanged("PlanningTime");
+            }
+        }
+        public bool _isExpandedDestination = false;
+        public bool IsExpandedDestination
+        {
+            get { return _isExpandedDestination; }
+            set
+            {
+                _isExpandedDestination = value;
+                OnPropertyChanged("IsExpandedDestination");
+            }
+        }
+
+        #endregion
+
+        #region Function
+        private void LoadDataFromConfig()
+        {
+            PlanningTime = UtilityFunctions.ConvertLongToDateTime(Config.PlanningTime);
         }
         #endregion
     }

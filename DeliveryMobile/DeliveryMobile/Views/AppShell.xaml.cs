@@ -1,6 +1,6 @@
 ﻿using DeliveryMobile.Base;
 using DeliveryMobile.ViewModels;
-using DeliveryMobile.WebAPIClient.PremierDuctServer;
+using DeliveryMobile.WebAPIClient.DeliveryServer;
 using DeliveryMobile.WebAPIClient.Utility;
 using System;
 using System.Collections.Generic;
